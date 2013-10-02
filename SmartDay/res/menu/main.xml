@@ -1,0 +1,35 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<!-- 
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+ -->
+    <item 
+        android:id="@+id/action_blacklist"
+        android:orderInCategory="99"
+        android:showAsAction="never"
+        android:title="@string/options_actionbar_blacklist"/>
+    <item 
+        android:id="@+id/action_delete_files"
+        android:orderInCategory="98"
+        android:showAsAction="never"
+        android:title="@string/options_actionbar_deleteFiles"/>
+    <item 
+        android:id="@+id/action_new_user"
+        android:orderInCategory="97"
+        android:showAsAction="never"
+        android:title="@string/options_actionbar_newUser"/>
+    <item 
+        android:id="@+id/action_color_apps"
+        android:orderInCategory="96"
+        android:showAsAction="ifRoom"
+        android:title="@string/options_actionbar_colorApp"/>
+    <item 
+        android:id="@+id/action_about"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/options_actionbar_about"/>
+
+</menu>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SmartDay</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="categories">Categories</string>
+    <string name="options">Options</string>
+    <string name="datepicker">Pick a date</string>
+    <string name="today">Today</string>
+    <string name="save">Save login data?</string>
+    <string-array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+<!-- Bundle identifier -->
+	<string name="start_view">startview</string>
+	<string name="bundle_app_string_array">bundle_app_string_array</string>
+
+<!-- SharedPreferences Identifier -->
+    <string name="key_date_end_default">default_date_end</string>
+    <string name="key_date_end_default_timestamp">default_date_end_as_timestamp</string>
+    <string name="key_date_end">date_end_by_user</string>
+    <string name="key_date_end_day">day_end</string>
+    <string name="key_date_end_month">month_end</string>
+    <string name="key_date_end_year">year_end</string>
+    <string name="key_apps">apps_chosen_by_user</string>
+    <string name="key_date_selected_apps">date_selected_apps</string>
+    
+    <string name="key_date_start_default">default_date_start</string>
+    <string name="key_date_start_default_timestamp">default_date_start_as_timestamp</string>
+    <string name="key_date_start">dat_starte_by_user</string>
+    <string name="key_date_start_day">day_start</string>
+    <string name="key_date_start_month">month_start</string>
+    <string name="key_date_start_year">year_start</string>
+    
+<!-- Error Messages -->
+    <string name="date_error">no date found</string>
+    <string name="error">Something went wrong</string>
+    <string name="error_no_string">Error: no such string</string>
+    <string name="error_no_user_jObj">No user data available</string>
+    <string name="error_authentication_fail">Invalid name or password</string>
+    <string name="error_storing_file">Storing file went wrong!</string>
+<!-- Infos -->
+	<string name="info_user_data_ok">User data verfied</string>
+	<string name="info_no_data_connection">No data connection available</string>
+<!-- Section Titles -->
+    <string-array name="sections">
+        <item>Map View</item>
+        <item>Chart View</item>
+        <item>Timeline</item>
+    </string-array>
+    
+<!-- Option Names -->    
+    <string name="options_map_text1">Highlight</string>   
+    <string name="options_map_text2">highlight app locations</string>   
+    <string name="options_chart_text1">Places</string> 
+    <string name="options_chart_text2">select places to be displayed</string>
+	<string name="options_app_text1">Apps</string>	
+	<string name="options_app_text2">select displayed apps</string>	
+	<string name="options_date_text2">select a date</string>	
+	<string name="options_app_select">select apps</string>
+	
+	<string name="options_actionbar_blacklist">Ignore apps</string>
+	<string name="options_actionbar_deleteFiles">Delete saved files</string>
+	<string name="options_actionbar_newUser">Switch user</string>
+	<string name="options_actionbar_colorApp">Color apps</string>
+	<string name="options_actionbar_about">About</string>
+	
+<!-- FileNames -->
+	<string name="file_ignored_apps">ignoreAppsFile</string>
+	<string name="file_app_colors">appcolorsFile</string>
+	<string name="user_file">user_preferences</string>
+	<!-- UserFile Identifier-->
+		<string name="user_name">name</string>
+		<string name="user_pass">password</string>
+		<string name="user_email">user_email</string>
+<!-- Hint -->
+	<string name="hint_user_name">Username</string>
+	<string name="hint_user_pass">Password</string>
+	<string name="hint_user_email">Email (optional)</string>
+</resources>
