@@ -110,7 +110,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		tmpJSONResultToday = new JSONObject();
 	}
 
-	private static void initDate(){
+	private static void initDate(){ //TODO Function in Utilities for Strings!
 		final Calendar c = Calendar.getInstance();
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int month = c.get(Calendar.MONTH);
@@ -134,7 +134,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		instance.getApps(null);
 	}
 	
-	private static void updateDate(){ 
+	private static void updateDate(){ //TODO Check current date via function in Utilities dont update crap
 		final Calendar c = Calendar.getInstance();
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int month = c.get(Calendar.MONTH);
@@ -152,11 +152,11 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	}
 	
 	public void createNewUser(){
-		userData.getUserLoginData(activity, true);
+		userData.getNewUserLoginData(activity);
 	}
 	
 	public interface onDataAvailableListener{
-		public void onDataAvailable(JSONObject[] results, String requestedFunction);
+		public void onDataAvailable(JSONObject[] results, String requestedFunction);//TODO no string parameter
 	}
 	
 	public void getApps(onDataAvailableListener listener){
@@ -211,14 +211,15 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		Utilities.writeFile(activity.getString(R.string.file_ignored_apps), ignoreApps.toString(), activity);
 		changedIgnoreApps=true;
 		getApps((onDataAvailableListener) activity);//(null, RequestedFunction.updatedFilter);
+		//TODO Notify in another more clean way
 	}
 	public void setSelectedApps(JSONObject selectedApps){
-		DataSet.selectedApps = selectedApps;
+		DataSet.selectedApps = selectedApps;//TODO Notify in another more clean way
 		((onDataAvailableListener)activity).onDataAvailable(null, RequestedFunction.updatedFilter);
 	}
 	
 	public void setSelectedHighlightApps(JSONObject selectedHighlightApps){
-		DataSet.selectedHighlightApps = selectedHighlightApps;
+		DataSet.selectedHighlightApps = selectedHighlightApps;//TODO Notify in another more clean way
 		((onDataAvailableListener)activity).onDataAvailable(null, RequestedFunction.updatedFilter);
 	}
 	
@@ -239,6 +240,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	}
 	
 	public long getTodayAsTimestamp(){
+		//TODO Use Calendar not shared bullshit
 		return sharedPreferences.getLong(activity.getString(R.string.key_date_end_default_timestamp), -1);
 	}
 	
@@ -252,7 +254,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		editor.putInt(activity.getString(R.string.key_date_end_month), endmonth);
 		editor.putInt(activity.getString(R.string.key_date_end_year), endyear);
 		editor.commit();
-		getApps((onDataAvailableListener) activity);
+		getApps((onDataAvailableListener) activity);//TODO Notify in another more clean way
 		
 	}
 	
@@ -411,7 +413,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		}
 	}
 	private void dataReady(JSONObject jObj, String requestedFunction, onDataAvailableListener requester){
-		for(int i=0;i<numberSelectedDays;i++){
+		for(int i=0;i<numberSelectedDays;i++){ //TODO Whole function is crappy for multiple days... at least i guess 
 			if(days[i]==null){
 				try {
 					days[i]=new JSONObject(jObj.toString());

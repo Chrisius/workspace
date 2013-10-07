@@ -52,10 +52,10 @@ public class UserData {
 	public void getUserLoginData(Context context){
 		getUserLoginData(context, false);
 	}
-	public void updateActivity(Activity act){
-		activity = act;
+	public void getNewUserLoginData(Context context){
+		getUserLoginData(context, true);
 	}
-	public void getUserLoginData(Context context, boolean createNew){
+	private void getUserLoginData(Context context, boolean createNew){
 		if(context != null)
 			activity = (Activity) context;
 		if(createNew || user == null){
@@ -71,7 +71,9 @@ public class UserData {
 			mCallBack.onUserDataAvailable(user);
 		}
 	}
-	
+	public void updateActivity(Activity act){
+		activity = act;
+	}
 	private static void askForUserLogInData(){
 		LoginDialogFragment login = new LoginDialogFragment(); 
 		if(((MainActivity) activity).isRunning())

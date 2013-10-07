@@ -99,7 +99,7 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 		
 		if(year>maxYear)
 			year=maxYear;	
-		if(month>maxMonth&&year>=maxYear){
+		if(month>maxMonth&&year==maxYear){
 			month = maxMonth;
 			day = maxDay;
 		}
@@ -118,15 +118,17 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 			//if startDate>endDate set endDate=startDate and update view
 			if(year>endYear)
 				endYear=year;	
-			if(month>endMonth&&year>=endYear)
+			if(month>endMonth&&year>=endYear){
 				endMonth = month;
+				endDay = day;
+			}
 			if(day>endDay&&month>=endMonth&&year>=endYear)
 				endDay = day;
 			view = (TextView) linearLayout.getChildAt(1);		
 			if(endDay==maxDay&&endMonth==maxMonth&&endYear==maxYear)
-				view.setTag("  From: Today");
+				view.setTag("  To: Today");
 			else
-				view.setText("  From: "+endDay+". "+getActivity().getResources().getStringArray(R.array.months)[endMonth]+" "+endYear);			
+				view.setText("  To: "+endDay+". "+getActivity().getResources().getStringArray(R.array.months)[endMonth]+" "+endYear);			
 			
 			
 			startDay = day;
@@ -142,8 +144,10 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 			//if endDate<startDate set startDate=endDate and update view
 			if(year<startYear)
 				startYear=year;	
-			if(month<startMonth&&year<=startYear)
+			if(month<startMonth&&year<=startYear){
 				startMonth = month;
+				startDay = day;
+			}
 			if(day<startDay&&month<=startMonth&&year<=startYear)
 				startDay=day;	
 			view = (TextView) linearLayout.getChildAt(0);		
