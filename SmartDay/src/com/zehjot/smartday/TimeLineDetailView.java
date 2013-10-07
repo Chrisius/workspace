@@ -280,7 +280,7 @@ public class TimeLineDetailView extends View {
 		/**
 		 * Time and duration with onClickListener
 		 */	
-		TextView header = createTextView("Total time:"+"\n"+"    "+Utilities.getTimeString(app.optLong("duration")));
+		TextView header = createTextView("Total time:"+"\n"+"    "+Utilities.getTimeAsString(app.optLong("duration")));
 		header.setPadding(10, 0, 10, 2);
 	    details.addView(header);
 	    header = createTextView("Locations:"+"\n"+"    ");
@@ -292,7 +292,7 @@ public class TimeLineDetailView extends View {
 			long start = appUsage.optLong("start");
 			long duration = appUsage.optLong("end")-start;
 			TextView view = createTextView("Used at "+ Utilities.getTimeFromTimeStamp(start));
-			start = Utilities.getTimeOfDay(start);
+			start = Utilities.getSecondsOfDay(start);
 			view.setOnClickListener(new View.OnClickListener() {									
 				@Override
 				public void onClick(View v) {
@@ -325,7 +325,7 @@ public class TimeLineDetailView extends View {
 				view.setBackgroundResource(android.R.color.holo_blue_dark);
 		    details.addView(view);
 		
-		    view = createTextView("    for "+Utilities.getTimeString(duration));					
+		    view = createTextView("    for "+Utilities.getTimeAsString(duration));					
 		    view.setOnClickListener(new View.OnClickListener() {									
 				@Override
 				public void onClick(View v) {

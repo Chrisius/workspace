@@ -300,8 +300,8 @@ public class TimeLineView extends View {
 						start = usage.optLong("start",-1);
 						end = usage.optLong("end",-1);
 						if(start!=-1&&end!=-1){
-							startInSec = Utilities.getTimeOfDay(start);
-							endInSec = Utilities.getTimeOfDay(end);						
+							startInSec = Utilities.getSecondsOfDay(start);
+							endInSec = Utilities.getSecondsOfDay(end);						
 							rectangles.put(new JSONObject().put("start",startInSec).put("length", endInSec-startInSec).put("app", appName));
 						}
 					}

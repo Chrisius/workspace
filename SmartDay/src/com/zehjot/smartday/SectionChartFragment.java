@@ -402,7 +402,7 @@ public class SectionChartFragment extends Fragment implements onDataAvailableLis
 							/**
 							 * Header
 							 */
-							TextView header = getView("Total time:"+"\n"+"    "+Utilities.getTimeString(app.optInt("duration")));
+							TextView header = getView("Total time:"+"\n"+"    "+Utilities.getTimeAsString(app.optInt("duration")));
 							header.setPadding(10, 5, 10, 5);
 							appTimes.addView(header);
 						    header = getView("Locations:"+"\n"+"    ");
@@ -450,7 +450,7 @@ public class SectionChartFragment extends Fragment implements onDataAvailableLis
 								view.setId((i*2));
 								appTimes.addView(view);
 							
-							    view = getView("    for "+Utilities.getTimeString(duration));				
+							    view = getView("    for "+Utilities.getTimeAsString(duration));				
 							    view.setOnClickListener(new View.OnClickListener() {									
 									@Override
 									public void onClick(View v) {
@@ -527,7 +527,7 @@ public class SectionChartFragment extends Fragment implements onDataAvailableLis
 				/**
 				 * Header
 				 */
-				TextView header = getView("Total time:"+"\n"+"    "+Utilities.getTimeString(app.optInt("duration")));
+				TextView header = getView("Total time:"+"\n"+"    "+Utilities.getTimeAsString(app.optInt("duration")));
 				header.setPadding(10, 5, 10, 5);
 			    appTimes.addView(header);
 			    header = getView("Locations:"+"\n"+"    ");
@@ -574,7 +574,7 @@ public class SectionChartFragment extends Fragment implements onDataAvailableLis
 					view.setId((i*2));
 				    appTimes.addView(view);
 				    
-				    view = getView("    for "+Utilities.getTimeString(duration));		    
+				    view = getView("    for "+Utilities.getTimeAsString(duration));		    
 				    view.setOnClickListener(new View.OnClickListener() {									
 						@Override
 						public void onClick(View v) {

@@ -379,8 +379,8 @@ public class SectionMapFragment extends MapFragment implements OnUpdateListener,
 		try {
 			JSONArray dates = new JSONArray(times[2]);
 			long date = dates.getLong(0);
-			jObject.put("time", Utilities.getTimeOfDay(start));
-			jObject.put("end", Utilities.getTimeOfDay(end));
+			jObject.put("time", Utilities.getSecondsOfDay(start));
+			jObject.put("end", Utilities.getSecondsOfDay(end));
 			jObject.put("date",date);
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -197,7 +197,7 @@ public class Utilities{
 			result += s;
 		return result;
 	}
-	public static String getTimeString(long sec){
+	public static String getTimeAsString(long sec){
 		String durationAsString = "";
 	    int h = (int)sec/3600;
 	    int m = ((int)sec%3600)/60;
@@ -230,10 +230,25 @@ public class Utilities{
 		int year = c.get(Calendar.YEAR);
 		return weekday+", "+day+". "+month+" "+year;
 	}
-	
-	public static int getTimeOfDay(long sec){
+	public static String getToday(){
 		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(sec*1000);
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		String month=c.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
+		int year = c.get(Calendar.YEAR);
+		return day+". "+month+" "+year;
+	}
+	
+	public static long getTodayTimestamp(){
+		Calendar c = Calendar.getInstance();
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		int month=c.get(Calendar.MONTH);
+		int year = c.get(Calendar.YEAR);
+		return getTimestamp(year, month, day, 0, 0, 0);
+	}
+	
+	public static int getSecondsOfDay(long timestamp){
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(timestamp*1000);
 		int h = c.get(Calendar.HOUR_OF_DAY);
 		int m = c.get(Calendar.MINUTE);
 		int s = c.get(Calendar.SECOND);

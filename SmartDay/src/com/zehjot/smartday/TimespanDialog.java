@@ -5,6 +5,8 @@ package com.zehjot.smartday;
 import java.util.Calendar;
 
 import com.zehjot.smartday.data_access.DataSet;
+import com.zehjot.smartday.helper.Utilities;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -27,7 +29,7 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 	private OnDateChosenListener listener;
 	
 	public interface OnDateChosenListener{
-		void onDateChosen(int startYear,int startMonth,int startDay,int endYear,int endMonth,int endDay);
+		void onDateChosen(long startTimestamp, long endTimestamp);
 	}
 	
 	public void setListener(OnDateChosenListener listener){
@@ -72,7 +74,9 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				listener.onDateChosen(startYear, startMonth, startDay, endYear, endMonth, endDay);
+				long startTimestamp = Utilities.getTimestamp(startYear, startMonth, startDay, 0, 0, 0);
+				long endTimestamp = Utilities.getTimestamp(endYear, endMonth, endDay, 0, 0, 0);
+				listener.onDateChosen(startTimestamp, endTimestamp);
 			}
 		})
 		.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

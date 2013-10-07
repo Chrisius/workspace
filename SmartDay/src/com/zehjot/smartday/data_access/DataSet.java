@@ -131,10 +131,10 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		editor.putInt(activity.getString(R.string.key_date_start_year), year);
 		
 		editor.commit();
-		instance.getApps(null);
+		instance.getApps(null);//TODO Notify in another way
 	}
 	
-	private static void updateDate(){ //TODO Check current date via function in Utilities dont update crap
+	private static void updateDate(){ //TODO Check current date via function in Utilities don't update crap
 		final Calendar c = Calendar.getInstance();
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int month = c.get(Calendar.MONTH);

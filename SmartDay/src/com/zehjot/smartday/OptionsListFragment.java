@@ -119,8 +119,8 @@ public class OptionsListFragment extends ListFragment implements onDataAvailable
 		updateOptions(pos);
 	}
 	
-    public void onDateChosen(int startyear, int startmonth, int startday, int endyear, int endmonth, int endday){
-    	dataSet.setSelectedDates(startyear, startmonth, startday, endyear, endmonth, endday);
+    public void onDateChosen(long startTimestamp, long endTimestamp){
+    	dataSet.setSelectedDates(startTimestamp, endTimestamp);
     	updateDate();
     }
 	public void updateDate(){
