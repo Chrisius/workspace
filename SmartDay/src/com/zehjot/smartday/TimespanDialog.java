@@ -2,7 +2,7 @@ package com.zehjot.smartday;
 
 
 
-import java.util.Calendar;
+//import java.util.Calendar;
 
 import com.zehjot.smartday.data_access.DataSet;
 import com.zehjot.smartday.helper.Utilities;
@@ -34,19 +34,27 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 	
 	@Override
 	public Dialog onCreateDialog(Bundle saved){
-		long startDate = DataSet.getInstance(getActivity()).getSelectedDateStartAsTimestamp();
-		long endDate = DataSet.getInstance(getActivity()).getSelectedDateEndAsTimestamp();
+		startDate = DataSet.getInstance(getActivity()).getSelectedDateStartAsTimestamp();
+		endDate = DataSet.getInstance(getActivity()).getSelectedDateEndAsTimestamp();
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		linearLayout = new LinearLayout(getActivity());
 		linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 		TextView tv1 = new TextView(getActivity());
-		tv1.setText(" From: "+Utilities.getDate(startDate));
+		if(startDate==Utilities.getTodayTimestamp())
+			tv1.setText(" From: Today");
+		else
+			tv1.setText(" From: "+Utilities.getDateShort(startDate));
+			
 		tv1.setTextSize(22);
 		tv1.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 		tv1.setId(101);
 		tv1.setOnClickListener(this);
+		
 		TextView tv2 = new TextView(getActivity());
-		tv2.setText("To: "+DataSet.getInstance(getActivity()).getSelectedDateEndAsString());
+		if(endDate==Utilities.getTodayTimestamp())
+			tv2.setText("To: Today");
+		else
+			tv2.setText("To: "+Utilities.getDateShort(endDate));
 		tv2.setTextSize(22);
 		tv2.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 		tv2.setId(102);
@@ -61,9 +69,7 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				long startTimestamp = Utilities.getTimestamp(startYear, startMonth, startDay, 0, 0, 0);
-				long endTimestamp = Utilities.getTimestamp(endYear, endMonth, endDay, 0, 0, 0);
-				listener.onDateChosen(startTimestamp, endTimestamp);
+				listener.onDateChosen(startDate, endDate);
 			}
 		})
 		.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -77,80 +83,50 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 	}
 
 	@Override
-	public void onDateChosen(int year, int month, int day, String whichDate) {
-		long timestamp = Utilities.getTimestamp(year, month, day, 0, 0, 0);
+	public void onDateChosen(long timestamp, String whichDate) {
 		/**
 		 * Upper bound for date
 		 */
-		long today = Utilities.getTodayTimestamp();
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(today*1000);
-		int maxYear = c.get(Calendar.YEAR);
-		int maxMonth = c.get(Calendar.MONTH);
-		int maxDay = c.get(Calendar.DAY_OF_MONTH);
-		
-		if(year>maxYear)
-			year=maxYear;	
-		if(month>maxMonth&&year==maxYear){
-			month = maxMonth;
-			day = maxDay;
-		}
-		if(day>maxDay&&month>=maxMonth&&year>=maxYear)
-			day = maxDay;	
+		long today = Utilities.getTodayTimestamp();		
+		if(timestamp>today)
+			timestamp = today;
 		/**
 		 * Display and save selected date
 		 */
-		if(whichDate.equals("start")){			
+		if(whichDate.equals("start")){
+			startDate = timestamp;			
 			TextView view = (TextView) linearLayout.getChildAt(0);	
-			if(day==maxDay&&month==maxMonth&&year==maxYear)
-				view.setText("  From: Today");
+			if(timestamp==today)
+				view.setText(" From: Today");
 			else
-				view.setText("  From: "+Utilities.getDateShort(timestamp));
+				view.setText(" From: "+Utilities.getDateShort(timestamp));
 			
 			//if startDate>endDate set endDate=startDate and update view
-			if(year>endYear)
-				endYear=year;	
-			if(month>endMonth&&year>=endYear){
-				endMonth = month;
-				endDay = day;
+			if(timestamp>endDate){
+				endDate=timestamp;
+				view = (TextView) linearLayout.getChildAt(1);		
+				if(endDate==today)
+					view.setText("To: Today");
+				else
+					view.setText("To: "+Utilities.getDateShort(endDate));			
 			}
-			if(day>endDay&&month>=endMonth&&year>=endYear)
-				endDay = day;
-			view = (TextView) linearLayout.getChildAt(1);		
-			if(endDay==maxDay&&endMonth==maxMonth&&endYear==maxYear)
-				view.setTag("  To: Today");
-			else
-				view.setText("  To: "+Utilities.getDateShort(timestamp));			
-			
-			
-			startDay = day;
-			startMonth = month;
-			startYear = year;
 		}else{
+			endDate = timestamp;
 			TextView view = (TextView) linearLayout.getChildAt(1);	
-			if(day==maxDay&&month==maxMonth&&year==maxYear)
+			if(timestamp==today)
 				view.setText("To: Today");
 			else
-				view.setText("To: "+day+". "+getActivity().getResources().getStringArray(R.array.months)[month]+" "+year);
+				view.setText("To: "+Utilities.getDateShort(timestamp));
 			
 			//if endDate<startDate set startDate=endDate and update view
-			if(year<startYear)
-				startYear=year;	
-			if(month<startMonth&&year<=startYear){
-				startMonth = month;
-				startDay = day;
+			if(timestamp<startDate){
+				startDate=timestamp;
+				view = (TextView) linearLayout.getChildAt(0);		
+				if(startDate==today)
+					view.setTag(" From: Today");
+				else
+					view.setText(" From: "+Utilities.getDateShort(startDate));		
 			}
-			if(day<startDay&&month<=startMonth&&year<=startYear)
-				startDay=day;	
-			view = (TextView) linearLayout.getChildAt(0);		
-			if(startDay==maxDay&&startMonth==maxMonth&&startYear==maxYear)
-				view.setTag("  From: Today");
-			else
-				view.setText("  From: "+startDay+". "+getActivity().getResources().getStringArray(R.array.months)[startMonth]+" "+startYear);		
-			
-			endDay = day;
-			endMonth = month;
-			endYear = year;
 		}
 	}
 

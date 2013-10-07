@@ -2,6 +2,9 @@ package com.zehjot.smartday;
 
 import java.util.Calendar;
 
+import com.zehjot.smartday.data_access.DataSet;
+import com.zehjot.smartday.helper.Utilities;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -18,6 +21,12 @@ public class DatePickerFragment extends DialogFragment
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		final Calendar c = Calendar.getInstance();
+		if(whichDate.equals("start")){
+			c.setTimeInMillis(DataSet.getInstance(getActivity()).getSelectedDateStartAsTimestamp()*1000);
+		}
+		else{
+			c.setTimeInMillis(DataSet.getInstance(getActivity()).getSelectedDateEndAsTimestamp()*1000);			
+		}
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int month = c.get(Calendar.MONTH);
 		int year = c.get(Calendar.YEAR);
@@ -26,17 +35,16 @@ public class DatePickerFragment extends DialogFragment
 		return dpd;
 	}
 	public void onDateSet(DatePicker view, int year, int month, int day){
-		mCallback.onDateChosen(year, month, day, whichDate);
+		mCallback.onDateChosen(Utilities.getTimestamp(year, month, day, 0, 0, 0), whichDate);
 	}
 	
 	public interface OnDateChosenListener{
-		public void onDateChosen(int year, int month, int day,String whichDate);
+		public void onDateChosen(long timestamp,String whichDate);
 	}
 
 	public void setListener(OnDateChosenListener optionsListFragment,String whichDate) {
 		mCallback = optionsListFragment;
-		this.whichDate=whichDate;
-		
+		this.whichDate=whichDate;		
 	}
 	@Override
 	public void onClick(DialogInterface arg0, int arg1) {
@@ -44,6 +52,6 @@ public class DatePickerFragment extends DialogFragment
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int month=c.get(Calendar.MONTH);
 		int year = c.get(Calendar.YEAR);
-		mCallback.onDateChosen(year, month, day, whichDate);
+		mCallback.onDateChosen(Utilities.getTimestamp(year, month, day, 0, 0, 0), whichDate);
 	}
 }
