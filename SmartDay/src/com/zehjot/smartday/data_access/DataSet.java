@@ -2,7 +2,7 @@ package com.zehjot.smartday.data_access;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Calendar;
+//import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Random;
 
@@ -22,7 +22,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+//import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -31,8 +31,8 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	private static DataSet instance = null;
 	private static UserData userData = null;
 	private static Activity activity = null;
-	private static SharedPreferences sharedPreferences = null;
-	private static SharedPreferences.Editor editor = null;
+//	private static SharedPreferences sharedPreferences = null;
+	//private static SharedPreferences.Editor editor = null;
 	private static JSONObject user = null;
 	private static long queryStart;
 	private static JSONObject selectedApps = null;
@@ -43,6 +43,9 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	private static long todayCacheMin = 5*60*1000;
 	private static JSONObject colorsOfApps = null;
 	private static boolean changedIgnoreApps=false;
+	
+	private static long startDate;
+	private static long endDate;
 	
 	private static int numberSelectedDays;
 	private static JSONObject[] days;
@@ -72,7 +75,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			return;
 		activity = act;
 		userData.updateActivity(act);
-		updateDate();
+	//	updateDate();
 	}
 	
 	public static JSONObject getUser() {
@@ -83,8 +86,8 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		instance = new DataSet();
 		activity = (Activity) context;
 		createUserData();
-		sharedPreferences = activity.getPreferences(MainActivity.MODE_PRIVATE);
-		editor = sharedPreferences.edit();
+//		sharedPreferences = activity.getPreferences(MainActivity.MODE_PRIVATE);
+	//	editor = sharedPreferences.edit();
 		selectedApps = new JSONObject();
 		selectedHighlightApps = new JSONObject();
 		if( activity.getFileStreamPath(activity.getString(R.string.file_ignored_apps)).exists()){
@@ -111,39 +114,40 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	}
 
 	private static void initDate(){ //TODO Function in Utilities for Strings!
-		final Calendar c = Calendar.getInstance();
-		int day = c.get(Calendar.DAY_OF_MONTH);
-		int month = c.get(Calendar.MONTH);
-		int year = c.get(Calendar.YEAR);
-		editor.putString(activity.getString(R.string.key_date_end_default), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
-		editor.putString(activity.getString(R.string.key_date_start_default), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
-		editor.putLong(activity.getString(R.string.key_date_end_default_timestamp), Utilities.getTimestamp(year, month, day, 0, 0, 0)).commit();
-		editor.putLong(activity.getString(R.string.key_date_start_default_timestamp), Utilities.getTimestamp(year, month, day, 0, 0, 0)).commit();
-		editor.commit();
-		editor.putString(activity.getString(R.string.key_date_end), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
-		editor.putInt(activity.getString(R.string.key_date_end_day), day);
-		editor.putInt(activity.getString(R.string.key_date_end_month), month);
-		editor.putInt(activity.getString(R.string.key_date_end_year), year);
-
-		editor.putString(activity.getString(R.string.key_date_start), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
-		editor.putInt(activity.getString(R.string.key_date_start_day), day);
-		editor.putInt(activity.getString(R.string.key_date_start_month), month);
-		editor.putInt(activity.getString(R.string.key_date_start_year), year);
-		
-		editor.commit();
+//		final Calendar c = Calendar.getInstance();
+//		int day = c.get(Calendar.DAY_OF_MONTH);
+//		int month = c.get(Calendar.MONTH);
+//		int year = c.get(Calendar.YEAR);
+//		editor.putString(activity.getString(R.string.key_date_end_default), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
+//		editor.putString(activity.getString(R.string.key_date_start_default), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
+//		editor.putLong(activity.getString(R.string.key_date_end_default_timestamp), Utilities.getTimestamp(year, month, day, 0, 0, 0)).commit();
+//		editor.putLong(activity.getString(R.string.key_date_start_default_timestamp), Utilities.getTimestamp(year, month, day, 0, 0, 0)).commit();
+//		editor.commit();
+//		editor.putString(activity.getString(R.string.key_date_end), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
+//		editor.putInt(activity.getString(R.string.key_date_end_day), day);
+//		editor.putInt(activity.getString(R.string.key_date_end_month), month);
+//		editor.putInt(activity.getString(R.string.key_date_end_year), year);
+//
+//		editor.putString(activity.getString(R.string.key_date_start), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
+//		editor.putInt(activity.getString(R.string.key_date_start_day), day);
+//		editor.putInt(activity.getString(R.string.key_date_start_month), month);
+//		editor.putInt(activity.getString(R.string.key_date_start_year), year);
+//		
+//		editor.commit();
+		startDate=endDate=Utilities.getTodayTimestamp();
 		instance.getApps(null);//TODO Notify in another way
 	}
 	
-	private static void updateDate(){ //TODO Check current date via function in Utilities don't update crap
-		final Calendar c = Calendar.getInstance();
-		int day = c.get(Calendar.DAY_OF_MONTH);
-		int month = c.get(Calendar.MONTH);
-		int year = c.get(Calendar.YEAR);
-		editor.putString(activity.getString(R.string.key_date_end_default), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
-		editor.putLong(activity.getString(R.string.key_date_end_default_timestamp), Utilities.getTimestamp(year, month, day, 0, 0, 0)).commit();
-		editor.putString(activity.getString(R.string.key_date_start_default), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
-		editor.putLong(activity.getString(R.string.key_date_start_default_timestamp), Utilities.getTimestamp(year, month, day, 0, 0, 0)).commit();				
-	}
+//	private static void updateDate(){ //TODO Check current date via function in Utilities don't update crap
+//		final Calendar c = Calendar.getInstance();
+//		int day = c.get(Calendar.DAY_OF_MONTH);
+//		int month = c.get(Calendar.MONTH);
+//		int year = c.get(Calendar.YEAR);
+//		editor.putString(activity.getString(R.string.key_date_end_default), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
+//		editor.putLong(activity.getString(R.string.key_date_end_default_timestamp), Utilities.getTimestamp(year, month, day, 0, 0, 0)).commit();
+//		editor.putString(activity.getString(R.string.key_date_start_default), day+". "+activity.getResources().getStringArray(R.array.months)[month]+" "+year);
+//		editor.putLong(activity.getString(R.string.key_date_start_default_timestamp), Utilities.getTimestamp(year, month, day, 0, 0, 0)).commit();				
+//	}
 	
 	private static void createUserData(){
 		if(userData==null)
@@ -224,51 +228,29 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	}
 	
 	public String getSelectedDateEndAsString(){
-		String date = getSharedString(R.string.key_date_end);
-		String default_date = sharedPreferences.getString(activity.getString(R.string.key_date_end_default), activity.getString(R.string.key_date_end_default));
-		if(date.equals(default_date))
+		if(endDate==Utilities.getTodayTimestamp())
 			return activity.getString(R.string.today);
-		return date;
+		return Utilities.getDate(endDate);
 	}
 	
 	public String getSelectedDateStartAsString(){
-		String date = getSharedString(R.string.key_date_start);
-		String default_date = sharedPreferences.getString(activity.getString(R.string.key_date_start_default), activity.getString(R.string.key_date_start_default));
-		if(date.equals(default_date))
+		if(startDate==Utilities.getTodayTimestamp())
 			return activity.getString(R.string.today);
-		return date;
+		return Utilities.getDate(startDate);
 	}
 	
-	public long getTodayAsTimestamp(){
-		//TODO Use Calendar not shared bullshit
-		return sharedPreferences.getLong(activity.getString(R.string.key_date_end_default_timestamp), -1);
-	}
-	
-	public void setSelectedDates(int startyear, int startmonth, int startday, int endyear, int endmonth, int endday){
-		editor.putString(activity.getString(R.string.key_date_start), startday+". "+activity.getResources().getStringArray(R.array.months)[startmonth]+" "+startyear);
-		editor.putInt(activity.getString(R.string.key_date_start_day), startday);
-		editor.putInt(activity.getString(R.string.key_date_start_month), startmonth);
-		editor.putInt(activity.getString(R.string.key_date_start_year), startyear);
-		editor.putString(activity.getString(R.string.key_date_end), endday+". "+activity.getResources().getStringArray(R.array.months)[endmonth]+" "+endyear);
-		editor.putInt(activity.getString(R.string.key_date_end_day), endday);
-		editor.putInt(activity.getString(R.string.key_date_end_month), endmonth);
-		editor.putInt(activity.getString(R.string.key_date_end_year), endyear);
-		editor.commit();
-		getApps((onDataAvailableListener) activity);//TODO Notify in another more clean way
-		
+	//Gets start and end date as timestamp at 00:00
+	public void setSelectedDates(long startTimestamp, long endTimestamp){
+		startDate=startTimestamp;
+		endDate=endTimestamp;
+		getApps((onDataAvailableListener) activity);//TODO Notify in another more clean way		
 	}
 	
 	public long getSelectedDateEndAsTimestamp(){
-		int year = getSharedInt(R.string.key_date_end_year);
-		int month = getSharedInt(R.string.key_date_end_month);
-		int day = getSharedInt(R.string.key_date_end_day);		
-		return Utilities.getTimestamp(year, month, day, 0, 0, 0);
+		return endDate;
 	}
-	public long getSelectedDateStartAsTimestamp(){
-		int year = getSharedInt(R.string.key_date_start_year);
-		int month = getSharedInt(R.string.key_date_start_month);
-		int day = getSharedInt(R.string.key_date_start_day);		
-		return Utilities.getTimestamp(year, month, day, 0, 0, 0);
+	public long getSelectedDateStartAsTimestamp(){	
+		return startDate;
 	}
 	public long getNextDayAsTimestamp(long timestamp){	
 		return timestamp+24*60*60;
@@ -364,11 +346,11 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 				return;
 			}else if(requestedFunction.equals(RequestedFunction.getEventsAtDate)){
 				JSONObject result = constructBasicJSONObj(jObj);
-				if(timestamp<getTodayAsTimestamp()){
+				if(timestamp<Utilities.getTodayTimestamp()){
 					tmpJSONResult = result;					
 					if(fileName != null)
 						new StoreFileTask(activity).execute(result.toString(),fileName);
-				}else if(timestamp==getTodayAsTimestamp()){
+				}else if(timestamp==Utilities.getTodayTimestamp()){
 					tmpJSONResultToday = result;
 				}
 				if(requester!=null){
@@ -378,7 +360,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 				}
 			}else if(requestedFunction.equals(RequestedFunction.initDataSet)){
 				JSONObject result = constructBasicJSONObj(jObj);
-				if(getSelectedDateEndAsTimestamp()==getTodayAsTimestamp())
+				if(getSelectedDateEndAsTimestamp()==Utilities.getTodayTimestamp())
 					tmpJSONResultToday = result;
 				else
 					tmpJSONResult = result;
@@ -437,20 +419,13 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			}
 		}
 	}
-
-	private String getSharedString(int id){
-		return sharedPreferences.getString(activity.getString(id), activity.getString(R.string.error_no_string));
-	}
-	private int getSharedInt(int id){
-		return sharedPreferences.getInt(activity.getString(id), -1);
-	}
 	public void getAllApps(onDataAvailableListener requester){
 		JSONObject data = new JSONObject();
 		try{
 			data.put("type", "APPSTART");
 			data.put("key", "app");
 			data.put("start", Utilities.getTimestamp(2012, 0, 1, 0, 0, 0));
-			data.put("end",getTodayAsTimestamp());
+			data.put("end",Utilities.getTodayTimestamp());
 		}catch(JSONException e){
 			
 		}
@@ -672,7 +647,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			//Check cached data	
 
 			if(tmpJSONResultToday!=null 
-					&& jObj.optLong("start",-1) == getTodayAsTimestamp() 
+					&& jObj.optLong("start",-1) == Utilities.getTodayTimestamp() 
 					&& (Utilities.getSystemTime()-tmpJSONResultToday.optLong("downloadTimestamp"))<todayCacheMin ){
 				onDataLoaded(tmpJSONResultToday, requestedFunction, requester, null);
 				return;

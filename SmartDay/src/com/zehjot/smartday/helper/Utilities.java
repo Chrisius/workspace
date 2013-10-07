@@ -220,7 +220,14 @@ public class Utilities{
 		int year = c.get(Calendar.YEAR);
 		return day+". "+month+" "+year;
 	}
-	
+	public static String getDateShort(long timestampInSec){
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(timestampInSec*1000);
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		String month=c.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US);
+		int year = c.get(Calendar.YEAR);
+		return day+". "+month+" "+year;
+	}
 	public static String getDateWithDay(long timestampInSec){
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(timestampInSec*1000);

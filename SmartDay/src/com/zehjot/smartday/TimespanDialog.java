@@ -20,12 +20,8 @@ import android.widget.TextView;
 public class TimespanDialog extends DialogFragment implements DatePickerFragment.OnDateChosenListener, View.OnClickListener {
 
 	private LinearLayout linearLayout;
-	private int startYear;
-	private int startMonth;
-	private int startDay;
-	private int endYear;
-	private int endMonth;
-	private int endDay;
+	private long startDate;
+	private long endDate;
 	private OnDateChosenListener listener;
 	
 	public interface OnDateChosenListener{
@@ -38,22 +34,13 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 	
 	@Override
 	public Dialog onCreateDialog(Bundle saved){
-		long start = DataSet.getInstance(getActivity()).getSelectedDateStartAsTimestamp();
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(start*1000);
-		startYear = c.get(Calendar.YEAR);
-		startMonth = c.get(Calendar.MONTH);
-		startDay = c.get(Calendar.DAY_OF_MONTH);
-		long end = DataSet.getInstance(getActivity()).getSelectedDateEndAsTimestamp();
-		c.setTimeInMillis(end*1000);
-		endYear = c.get(Calendar.YEAR);
-		endMonth = c.get(Calendar.MONTH);
-		endDay = c.get(Calendar.DAY_OF_MONTH);
+		long startDate = DataSet.getInstance(getActivity()).getSelectedDateStartAsTimestamp();
+		long endDate = DataSet.getInstance(getActivity()).getSelectedDateEndAsTimestamp();
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		linearLayout = new LinearLayout(getActivity());
 		linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 		TextView tv1 = new TextView(getActivity());
-		tv1.setText(" From: "+DataSet.getInstance(getActivity()).getSelectedDateStartAsString());
+		tv1.setText(" From: "+Utilities.getDate(startDate));
 		tv1.setTextSize(22);
 		tv1.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 		tv1.setId(101);
@@ -91,10 +78,11 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 
 	@Override
 	public void onDateChosen(int year, int month, int day, String whichDate) {
+		long timestamp = Utilities.getTimestamp(year, month, day, 0, 0, 0);
 		/**
 		 * Upper bound for date
 		 */
-		long today = DataSet.getInstance(getActivity()).getTodayAsTimestamp();
+		long today = Utilities.getTodayTimestamp();
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(today*1000);
 		int maxYear = c.get(Calendar.YEAR);
@@ -117,7 +105,7 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 			if(day==maxDay&&month==maxMonth&&year==maxYear)
 				view.setText("  From: Today");
 			else
-				view.setText("  From: "+day+". "+getActivity().getResources().getStringArray(R.array.months)[month]+" "+year);
+				view.setText("  From: "+Utilities.getDateShort(timestamp));
 			
 			//if startDate>endDate set endDate=startDate and update view
 			if(year>endYear)
@@ -132,7 +120,7 @@ public class TimespanDialog extends DialogFragment implements DatePickerFragment
 			if(endDay==maxDay&&endMonth==maxMonth&&endYear==maxYear)
 				view.setTag("  To: Today");
 			else
-				view.setText("  To: "+endDay+". "+getActivity().getResources().getStringArray(R.array.months)[endMonth]+" "+endYear);			
+				view.setText("  To: "+Utilities.getDateShort(timestamp));			
 			
 			
 			startDay = day;
