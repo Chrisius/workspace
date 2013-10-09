@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -255,18 +256,23 @@ public class TimeLineDetailView extends View {
 
 
 	private void addDetails(String appName, int time) {
-		HorizontalScrollView scrollView = new HorizontalScrollView(getContext());
 		LinearLayout layout = (LinearLayout) getParent();	//Check if extra layouts for time and location are initialized - if not, do so
 		if(layout.getChildAt(1)==null){
+			HorizontalScrollView scrollView = new HorizontalScrollView(getContext());
+			LinearLayout horizLL = new LinearLayout(getContext());
+			horizLL.setOrientation(LinearLayout.HORIZONTAL);
+			scrollView.addView(horizLL);
 			LinearLayout tmp = new LinearLayout(getContext());
 			tmp.setOrientation(LinearLayout.VERTICAL);
-			layout.addView(tmp);
+			horizLL.addView(tmp);
 			tmp = new LinearLayout(getContext());
 			tmp.setOrientation(LinearLayout.VERTICAL);
-			layout.addView(tmp);
+			horizLL.addView(tmp);
+			layout.addView(scrollView);
 		}
-		LinearLayout details = (LinearLayout) layout.getChildAt(1);
-		LinearLayout places = (LinearLayout) layout.getChildAt(2);
+		layout = (LinearLayout) ((ViewGroup) layout.getChildAt(1)).getChildAt(0);
+		LinearLayout details = (LinearLayout) layout.getChildAt(0);
+		LinearLayout places = (LinearLayout) layout.getChildAt(1);
 		details.removeAllViews();
 		places.removeAllViews();
 		JSONArray apps = jObj.optJSONArray("result"); //find the JSONObj which represents appName
