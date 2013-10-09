@@ -19,6 +19,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -254,6 +255,7 @@ public class TimeLineDetailView extends View {
 
 
 	private void addDetails(String appName, int time) {
+		HorizontalScrollView scrollView = new HorizontalScrollView(getContext());
 		LinearLayout layout = (LinearLayout) getParent();	//Check if extra layouts for time and location are initialized - if not, do so
 		if(layout.getChildAt(1)==null){
 			LinearLayout tmp = new LinearLayout(getContext());

@@ -118,6 +118,22 @@ public class MainActivity extends Activity
 			file.delete();
 			dataSet.createNewUser();
 			break;
+		case R.id.timespan:
+			TimespanDialog date = new TimespanDialog();
+	    	date.show(getFragmentManager(), getString(R.string.datepicker));	
+			break;
+		case R.id.select_apps:
+			SelectAppsDialogFragment appsA = new SelectAppsDialogFragment();
+			appsA.setStrings(null);
+			appsA.setMode(SelectAppsDialogFragment.SELECT_APPS);
+			appsA.show(getFragmentManager(), getString(R.string.datepicker));
+			break;
+		case R.id.highlight_apps:
+			SelectAppsDialogFragment appsB = new SelectAppsDialogFragment();
+			appsB.setStrings(null);
+			appsB.setMode(SelectAppsDialogFragment.SELECT_HIGHLIGHT_APPS);
+			appsB.show(getFragmentManager(), getString(R.string.datepicker));	
+			break;
 		default:
 			break;
 		}
@@ -187,15 +203,22 @@ public class MainActivity extends Activity
         }
 	}
 	
-	private void init(Bundle savedInstanceState){
+	private void init(Bundle savedInstanceState){		
     	optionsListFragment = (OptionsListFragment) fm.findFragmentByTag("optionsList");
 		if(optionsListFragment== null){
 	    	optionsListFragment = new OptionsListFragment();
-	    	fm.beginTransaction().add(R.id.options_fragment_container, optionsListFragment,"optionsList").commit();
+	    	if(findViewById(R.id.options_fragment_container)!=null)
+	    		fm.beginTransaction().add(R.id.options_fragment_container, optionsListFragment,"optionsList").commit();
+	    	else{
+				getActionBar().setDisplayShowTitleEnabled(false);
+				getActionBar().setDisplayShowHomeEnabled(false);        
+				
+
+	    	}
 		}
         /**
          * Set Up Tabs
-         */
+         */        
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         Tab tab = actionBar.newTab();
@@ -216,6 +239,6 @@ public class MainActivity extends Activity
         tab.setTabListener(time);
         actionBar.addTab(tab);
 
-		
+	
 	}
 }

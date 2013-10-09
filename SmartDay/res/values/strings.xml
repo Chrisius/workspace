@@ -8,7 +8,7 @@
     <string name="options">Options</string>
     <string name="datepicker">Pick a date</string>
     <string name="today">Today</string>
-    <string name="save">Save login data?</string>
+    <string name="save">   Save login data?</string>
     <string-array name="months">
         <item>January</item>
         <item>February</item>
@@ -27,7 +27,7 @@
 	<string name="start_view">startview</string>
 	<string name="bundle_app_string_array">bundle_app_string_array</string>
 
-<!-- SharedPreferences Identifier -->
+<!-- SharedPreferences Identifier 
     <string name="key_date_end_default">default_date_end</string>
     <string name="key_date_end_default_timestamp">default_date_end_as_timestamp</string>
     <string name="key_date_end">date_end_by_user</string>
@@ -43,7 +43,7 @@
     <string name="key_date_start_day">day_start</string>
     <string name="key_date_start_month">month_start</string>
     <string name="key_date_start_year">year_start</string>
-    
+  -->  
 <!-- Error Messages -->
     <string name="date_error">no date found</string>
     <string name="error">Something went wrong</string>

@@ -13,6 +13,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -24,11 +26,20 @@ public class SectionTimelineFragment extends Fragment implements OnUpdateListene
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+		setHasOptionsMenu(true);
 		Log.d("Timeline", "CreateView");
 		super.onCreateView(inflater, container, savedInstanceState);
 		return inflater.inflate(R.layout.section_timeline_fragment, container, false);
 	}
-
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if(getActivity().findViewById(R.id.options_fragment_container)==null){
+			inflater.inflate(R.menu.timeline_menu, menu);
+		}
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+	
 	@Override
 	public void onResume(){
 		super.onResume();

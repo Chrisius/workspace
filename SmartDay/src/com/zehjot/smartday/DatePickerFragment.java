@@ -17,15 +17,25 @@ public class DatePickerFragment extends DialogFragment
 					implements DatePickerDialog.OnDateSetListener, OnClickListener {
 	OnDateChosenListener mCallback;
 	String whichDate;
+	private long timestamp=-1;
+	
+	public void setTimestamp(long timestamp){
+		this.timestamp=timestamp;
+	}
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		final Calendar c = Calendar.getInstance();
-		if(whichDate.equals("start")){
-			c.setTimeInMillis(DataSet.getInstance(getActivity()).getSelectedDateStartAsTimestamp()*1000);
+		if(timestamp==-1){
+			if(whichDate.equals("start")){
+				c.setTimeInMillis(DataSet.getInstance(getActivity()).getSelectedDateStartAsTimestamp()*1000);
+			}
+			else{
+				c.setTimeInMillis(DataSet.getInstance(getActivity()).getSelectedDateEndAsTimestamp()*1000);			
+			}
 		}
 		else{
-			c.setTimeInMillis(DataSet.getInstance(getActivity()).getSelectedDateEndAsTimestamp()*1000);			
+			c.setTimeInMillis(timestamp*1000);		
 		}
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int month = c.get(Calendar.MONTH);

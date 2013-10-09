@@ -23,6 +23,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -35,7 +37,16 @@ public class SectionChartFragment extends Fragment implements onDataAvailableLis
 	private static double minTimeinPercent = 0.05;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+		setHasOptionsMenu(true);
 		return inflater.inflate(R.layout.section_chart_fragment, container, false);
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if(getActivity().findViewById(R.id.options_fragment_container)==null){
+			inflater.inflate(R.menu.chart_menu, menu);
+		}
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 	
 	@Override

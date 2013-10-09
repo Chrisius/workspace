@@ -32,7 +32,6 @@ public class OptionsListFragment extends ListFragment implements onDataAvailable
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		
 		dataSet = DataSet.getInstance(getActivity());
 		/*---Initialize data for list---*/
 		final String[] fromMapKey = new String[] {TEXT1, TEXT2};
@@ -129,27 +128,31 @@ public class OptionsListFragment extends ListFragment implements onDataAvailable
 	}
 	
 	private void updateOptions(int pos){
-		switch (pos) {
-		case 0:
-			if(displayedOptions.size()<3){//check if exists because of nullpointer
-				displayedOptions.add(toMap(getString(R.string.options_map_text1), getString(R.string.options_map_text2)));}
-			else{
-				displayedOptions.set(2,toMap(getString(R.string.options_map_text1), getString(R.string.options_map_text2)));}
-			optionsListAdapter.notifyDataSetChanged();
-			break;
-		case 1:
-			if(displayedOptions.size()>2){
-				displayedOptions.remove(2);
-				optionsListAdapter.notifyDataSetChanged();}
-			break;
-		case 2:
-			if(displayedOptions.size()>2){
-				displayedOptions.remove(2);
-				optionsListAdapter.notifyDataSetChanged();}
-			break;
-		default:
-			break;
-		}
+    	if(getActivity().findViewById(R.id.options_fragment_container)!=null){
+			switch (pos) {
+			case 0:
+				if(displayedOptions.size()<3){//check if exists because of nullpointer
+					displayedOptions.add(toMap(getString(R.string.options_map_text1), getString(R.string.options_map_text2)));}
+				else{
+					displayedOptions.set(2,toMap(getString(R.string.options_map_text1), getString(R.string.options_map_text2)));}
+				optionsListAdapter.notifyDataSetChanged();
+				break;
+			case 1:
+				if(displayedOptions.size()>2){
+					displayedOptions.remove(2);
+					optionsListAdapter.notifyDataSetChanged();}
+				break;
+			case 2:
+				if(displayedOptions.size()>2){
+					displayedOptions.remove(2);
+					optionsListAdapter.notifyDataSetChanged();}
+				break;
+			default:
+				break;
+			}
+    	}else{
+    		
+    	}
 	}
 	
 	private Map<String,String> displayDate(){

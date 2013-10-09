@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item 
+        android:title="View Options"
+        android:showAsAction="always"
+        android:orderInCategory="101">
+        <menu>    
+            <item 
+               	android:id="@+id/timespan"
+		       	android:title="Switch Timespan"
+		       	android:orderInCategory="95"/>   
+            <item 
+               	android:id="@+id/select_apps"
+		       	android:title="Displayed Apps"
+		       	android:orderInCategory="96"/> 
+            
+            
+        </menu>
+        
+    </item>
+
+</menu>

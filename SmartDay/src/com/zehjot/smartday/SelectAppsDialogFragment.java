@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import com.zehjot.smartday.R;
 import com.zehjot.smartday.data_access.DataSet;
+import com.zehjot.smartday.helper.Utilities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -24,6 +25,9 @@ public class SelectAppsDialogFragment extends DialogFragment{
 	private boolean[] boolSelectedApps;
 	
 	public void setStrings(String[] strings) {
+		if(strings == null){
+			strings = Utilities.jObjValuesToArrayList(DataSet.getInstance(getActivity()).getCachedDayData()).toArray(new String[0]);
+		}
 		Arrays.sort(strings);
 		this.strings = strings;
 	}

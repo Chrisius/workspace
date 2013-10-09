@@ -190,6 +190,10 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		((onDataAvailableListener)activity).onDataAvailable(null, RequestedFunction.updatedFilter);
 	}
 	
+	public JSONObject[] getCachedDayData(){
+		return days;
+	}
+	
 	public String getSelectedDateEndAsString(){
 		if(endDate==Utilities.getTodayTimestamp())
 			return activity.getString(R.string.today);

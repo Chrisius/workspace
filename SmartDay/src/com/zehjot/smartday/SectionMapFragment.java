@@ -27,6 +27,8 @@ import com.zehjot.smartday.helper.Utilities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -39,11 +41,18 @@ public class SectionMapFragment extends MapFragment implements OnUpdateListener,
 	private Polyline polyline;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+		setHasOptionsMenu(true);
 		Log.d("MapView", "CreateView");
 		return super.onCreateView(inflater, container, savedInstanceState);
 		
 	}
-	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if(getActivity().findViewById(R.id.options_fragment_container)==null){
+			inflater.inflate(R.menu.map_menu, menu);
+		}
+		super.onCreateOptionsMenu(menu, inflater);
+	}
 	
 	
 	public void onUpdate(JSONObject[] jObjs) {
