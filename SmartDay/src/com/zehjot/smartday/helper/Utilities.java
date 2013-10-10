@@ -253,6 +253,7 @@ public class Utilities{
 		return getTimestamp(year, month, day, 0, 0, 0);
 	}
 	
+	
 	public static int getSecondsOfDay(long timestamp){
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(timestamp*1000);

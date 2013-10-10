@@ -295,7 +295,7 @@ public class SectionChartFragment extends Fragment implements onDataAvailableLis
 				renderer.setZoomEnabled(false);
 				renderer.setClickEnabled(true);
 				renderer.setInScroll(true);
-				renderer.setChartTitle(Utilities.getDateWithDay(date)+", Total time "+totaltime+" min");
+				renderer.setChartTitle(Utilities.getDateWithDay(date)+", Total time "+Utilities.getTimeAsString((long) (totaltime*60)));
 				chartView = ChartFactory.getPieChartView(getActivity(), categories, renderer);	
 				chartView.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -367,7 +367,7 @@ public class SectionChartFragment extends Fragment implements onDataAvailableLis
 				}
 				if(wasClicked)
 					addDetail(selectedRenderer);
-				renderer.setChartTitle(Utilities.getDate(date)+", Total time "+totaltime+" min");
+				renderer.setChartTitle(Utilities.getDate(date)+", Total time "+Utilities.getTimeAsString((long) (totaltime*60)));
 				chartView.repaint();
 			}
 		}

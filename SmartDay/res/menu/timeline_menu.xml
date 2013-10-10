@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item 
-        android:title="View Options"
+        android:title="@string/options_actionbar_menutitle"
         android:showAsAction="always"
         android:orderInCategory="101">
         <menu>    
             <item 
                	android:id="@+id/timespan"
-		       	android:title="Switch Timespan"
+		       	android:title="@string/options_actionbar_select_timespan"
 		       	android:orderInCategory="95"/>   
             <item 
                	android:id="@+id/select_apps"
-		       	android:title="Displayed Apps"
-		       	android:orderInCategory="96"/>                  
+		       	android:title="@string/options_actionbar_select_apps"
+		       	android:orderInCategory="96"/> 
+            
             
         </menu>
         
