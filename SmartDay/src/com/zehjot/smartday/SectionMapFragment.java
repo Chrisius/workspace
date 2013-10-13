@@ -196,145 +196,146 @@ public class SectionMapFragment extends MapFragment implements OnUpdateListener,
 			JSONObject highlightApps = DataSet.getInstance(getActivity()).getSelectedHighlightApps();
 			marker = new JSONObject();
 			JSONArray positions = new JSONArray();
-			for(int x=0; x<jObjs.length;x++){
-			JSONArray apps = jObjs[x].getJSONArray("result");
-			marker.put("positions",positions);
-			for(int i=0; i<apps.length();i++){
-				JSONObject app = apps.getJSONObject(i);
-				String appName = app.getString("app");
-				if(displayedApps.optBoolean(appName,true)){					
-					JSONArray usages = app.getJSONArray("usage");
-					for(int j=0;j<usages.length();j++){
-						JSONObject usage = usages.getJSONObject(j);
-						JSONArray location = usage.optJSONArray("location");
-						if(location != null){						
-							long start=usage.optLong("start", -1);
-							long end=usage.optLong("end", -1);
-							double lat;
-							double lng;
-							if(end==-1)
-								end=start;
-							if(start!=-1){
-								if(location.getJSONObject(0).getString("key").equals("lat")){
-									lat = location.getJSONObject(0).getDouble("value");
-									lng = location.getJSONObject(1).getDouble("value");	
-								}else{
-									lng = location.getJSONObject(0).getDouble("value");
-									lat = location.getJSONObject(1).getDouble("value");						
-								}
-								boolean found = false;
-								for(int k=0;k<positions.length();k++){
-									JSONObject position = positions.getJSONObject(k);
-									if(position.getDouble("lat")==lat&&position.getDouble("lng")==lng){
-										JSONArray markerApps = position.getJSONArray("apps");
-										long date = jObjs[x].getLong("dateTimestamp");
-										JSONArray dates = position.getJSONArray("dates");
-										boolean foundDate=false;
-										for(int l=0;l<dates.length();l++){
-											if(dates.getLong(l)==date){
-												foundDate = true;
-												break;
+			for(int x=0; x<jObjs.length;x++){ //every day
+				JSONArray apps = jObjs[x].getJSONArray("result");
+				marker.put("positions",positions);
+				for(int i=0; i<apps.length();i++){ //every app
+					JSONObject app = apps.getJSONObject(i);
+					String appName = app.getString("app");
+					if(displayedApps.optBoolean(appName,true)){					
+						JSONArray usages = app.getJSONArray("usage");
+						for(int j=0;j<usages.length();j++){ //every usage
+							JSONObject usage = usages.getJSONObject(j);
+							JSONArray location = usage.optJSONArray("location");
+							if(location != null){						
+								long start=usage.optLong("start", -1);
+								long end=usage.optLong("end", -1);
+								double lat;
+								double lng;
+								if(end==-1)
+									end=start;
+								if(start!=-1){
+									if(location.getJSONObject(0).getString("key").equals("lat")){
+										lat = location.getJSONObject(0).getDouble("value");
+										lng = location.getJSONObject(1).getDouble("value");	
+									}else{
+										lng = location.getJSONObject(0).getDouble("value");
+										lat = location.getJSONObject(1).getDouble("value");						
+									}
+									boolean found = false;
+									for(int k=0;k<positions.length();k++){ // for every new position 
+										JSONObject position = positions.getJSONObject(k);
+										if(position.getDouble("lat")==lat&&position.getDouble("lng")==lng){ //if usage position equals an existing position obj
+											JSONArray markerApps = position.getJSONArray("apps");
+											long date = jObjs[x].getLong("dateTimestamp");
+											JSONArray dates = position.getJSONArray("dates");
+											boolean foundDate=false;
+											for(int l=0;l<dates.length();l++){
+												if(dates.getLong(l)==date){
+													foundDate = true;
+													break;
+												}
 											}
+											if(!foundDate){									
+												position.getJSONArray("dates").put(jObjs[x].getLong("dateTimestamp"));
+											}
+											for(int l=0;l<markerApps.length();l++){
+												JSONObject markerApp = markerApps.getJSONObject(l);
+												if(markerApp.getString("app").equals(appName)){ // add appname exists in position object add its usagetime to position
+													markerApp.getJSONArray("usage").put(new JSONObject()
+													.put("start", start)
+													.put("end",end));
+												found =true;
+												break;
+												}
+											}
+											if(!found){ // if appname was not found create new appname with usagtimne
+												markerApps.put(new JSONObject()
+													.put("highlight",highlightApps.optBoolean(appName))
+													.put("app", appName)
+													.put("usage", new JSONArray()
+														.put(new JSONObject()
+															.put("start", start)
+															.put("end",end)
+														)
+													)
+												);
+												found = true;
+											}
+											break;
 										}
-										if(!foundDate){									
-											position.getJSONArray("dates").put(jObjs[x].getLong("dateTimestamp"));
-										}
-										for(int l=0;l<markerApps.length();l++){
-											JSONObject markerApp = markerApps.getJSONObject(l);
-											if(markerApp.getString("app").equals(appName)){
-												markerApp.getJSONArray("usage").put(new JSONObject()
-												.put("start", start)
-												.put("end",end));
-											found =true;
+										//TODO add else case which calculates distance to existent position object and store array index along with distance 
+									}
+									if(!found){ //if no location with lat lng was found create new location
+										//TODO add position to existent object if distance is lesser than 10? meter 
+										long locStart=-1;
+										long locEnd=-1;
+										JSONArray locations = jObjs[x].getJSONArray("locations");
+										for(int k=0;k<locations.length();k++ ){
+											JSONObject tmpLocation = locations.getJSONObject(k);
+											if(tmpLocation.getDouble("lat")==lat&&tmpLocation.getDouble("lng")==lng){
+												locStart = tmpLocation.getLong("timestamp");
+												if(k<locations.length()-1)
+													locEnd = locations.getJSONObject(k+1).getLong("timestamp");
 											break;
 											}
 										}
-										if(!found){
-											markerApps.put(new JSONObject()
-												.put("highlight",highlightApps.optBoolean(appName))
-												.put("app", appName)
-												.put("usage", new JSONArray()
-													.put(new JSONObject()
-														.put("start", start)
-														.put("end",end)
-													)
-												)
-											);
-											found = true;
-										}
-										break;
-									}
-								}
-								if(!found){
-									long locStart=-1;
-									long locEnd=-1;
-									JSONArray locations = jObjs[x].getJSONArray("locations");
-									for(int k=0;k<locations.length();k++ ){
-										JSONObject tmpLocation = locations.getJSONObject(k);
-										if(tmpLocation.getDouble("lat")==lat&&tmpLocation.getDouble("lng")==lng){
-											locStart = tmpLocation.getLong("timestamp");
-											if(k<locations.length()-1)
-												locEnd = locations.getJSONObject(k+1).getLong("timestamp");
-										break;
-										}
-									}
-									
-									
-									positions.put(new JSONObject()
-										.put("dates", new JSONArray()
-											.put(jObjs[x].getLong("dateTimestamp"))
-										)
-										.put("lat", lat)
-										.put("lng", lng)
-										.put("start", locStart)
-										.put("end", locEnd)
-										.put("apps", new JSONArray()
-											.put(new JSONObject()
-												.put("highlight",highlightApps.optBoolean(appName))
-												.put("app", appName)
-												.put("usage", new JSONArray()
-													.put(new JSONObject()
-														.put("start", start)
-														.put("end",end)
+										
+										
+										positions.put(new JSONObject()
+											.put("dates", new JSONArray()
+												.put(jObjs[x].getLong("dateTimestamp"))
+											)
+											.put("lat", lat)
+											.put("lng", lng)
+											.put("start", locStart)
+											.put("end", locEnd)
+											.put("apps", new JSONArray()
+												.put(new JSONObject()
+													.put("highlight",highlightApps.optBoolean(appName))
+													.put("app", appName)
+													.put("usage", new JSONArray()
+														.put(new JSONObject()
+															.put("start", start)
+															.put("end",end)
+														)
 													)
 												)
 											)
-										)
-									);
+										);
+									}
 								}
 							}
 						}
 					}
 				}
-			}
-			for(int i=0; i<positions.length();i++){
-				JSONObject position = positions.getJSONObject(i);
-				long markerEnd = position.getLong("end");
-				long markerStart = position.getLong("start");
-					JSONArray tmpApps = position.getJSONArray("apps");
-					for(int j = 0; j<tmpApps.length();j++){
-						JSONObject tmpApp = tmpApps.getJSONObject(j);
-						JSONArray tmpUsages = tmpApp.getJSONArray("usage");
-						for(int k=0;k<tmpUsages.length();k++){
-							JSONObject tmpUsage = tmpUsages.getJSONObject(k);
-							long tmpStart = tmpUsage.optLong("start",-1);
-							long tmpEnd = tmpUsage.optLong("end", -1);
-							if(tmpEnd!=-1 && markerEnd<tmpEnd){
-								markerEnd = tmpEnd;
-							}
-							if(markerStart>tmpStart&&tmpStart!=-1){
-								markerStart = tmpStart;
+				for(int i=0; i<positions.length();i++){
+					JSONObject position = positions.getJSONObject(i);
+					long markerEnd = position.getLong("end");
+					long markerStart = position.getLong("start");
+						JSONArray tmpApps = position.getJSONArray("apps");
+						for(int j = 0; j<tmpApps.length();j++){
+							JSONObject tmpApp = tmpApps.getJSONObject(j);
+							JSONArray tmpUsages = tmpApp.getJSONArray("usage");
+							for(int k=0;k<tmpUsages.length();k++){
+								JSONObject tmpUsage = tmpUsages.getJSONObject(k);
+								long tmpStart = tmpUsage.optLong("start",-1);
+								long tmpEnd = tmpUsage.optLong("end", -1);
+								if(tmpEnd!=-1 && markerEnd<tmpEnd){
+									markerEnd = tmpEnd;
+								}
+								if(markerStart>tmpStart&&tmpStart!=-1){
+									markerStart = tmpStart;
+								}
 							}
 						}
-					}
-					position.put("end", markerEnd);
-					position.put("start", markerStart);
-			}
+						position.put("end", markerEnd);
+						position.put("start", markerStart);
+				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		//zoomTo(testlat, testlng);
 		return marker;
 	}
 
