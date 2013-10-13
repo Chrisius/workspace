@@ -87,7 +87,8 @@ public class DownloadTask extends AsyncTask<String, Void, JSONObject> implements
 		if(((MainActivity)activity).isRunning())
 			progress.cancel();
 		try {
-			result.put("date", timestamp);
+			if(result!=null)
+				result.put("date", timestamp);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
