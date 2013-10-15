@@ -1,8 +1,6 @@
 package com.zehjot.smartday;
 
 import java.util.Arrays;
-import java.util.Random;
-
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.model.CategorySeries;
@@ -20,6 +18,7 @@ import com.zehjot.smartday.helper.Utilities;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -76,10 +75,15 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 			charts = new MyChart[jObjs.length];
 			layout.removeAllViews();
 		}
+		
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		int px = displaymetrics.widthPixels;
+		
 		for(int i=0;i<jObjs.length;i++){
 			if(layout.findViewById(i+10)==null){
 				LinearLayout chartDrawContainer = new LinearLayout(getActivity());
-				chartDrawContainer.setLayoutParams(new LayoutParams(600, 600));
+				chartDrawContainer.setLayoutParams(new LayoutParams(px*3/5, px*3/5));
 				chartDrawContainer.setId(i+10);
 				layout.addView(chartDrawContainer);
 			}
@@ -269,6 +273,7 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 				}
 				renderer.setFitLegend(true);	
 				renderer.setDisplayValues(true);
+				renderer.setShowLegend(false);
 				renderer.setPanEnabled(false);
 				renderer.setZoomEnabled(false);
 				renderer.setClickEnabled(true);
@@ -345,7 +350,7 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 				}
 				if(wasClicked)
 					addDetail(selectedRenderer);
-				renderer.setChartTitle(Utilities.getDate(date)+", Total time "+Utilities.getTimeAsString((long) (totaltime*60)));
+				renderer.setChartTitle(Utilities.getDateWithDay(date)+", Total time "+Utilities.getTimeAsString((long) (totaltime*60)));
 				chartView.repaint();
 			}
 		}

@@ -486,8 +486,10 @@ public class TimeLineView extends View {
 					selectedTime = (int) time;
 				}
 				//appSessionCount = getAppSessionCount(selectedApp);
-				invalidate();
-				addDetail();
+				if(!selectedApp.equals("")){
+					invalidate();
+					addDetail();
+				}
 			}
 			return true;
 		}

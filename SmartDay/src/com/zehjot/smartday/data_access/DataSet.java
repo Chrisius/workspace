@@ -233,6 +233,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		return colorsOfApps;
 	}
 	public JSONObject getColorsOfApps(JSONObject jObj){
+		boolean newColor=false;
 		if(colorsOfApps==null){
 			colorsOfApps = new JSONObject();
 		}
@@ -246,6 +247,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 					.put("app","Other")
 					.put("color",0xFF00F0FF)							
 				);
+				newColor = true;
 			}
 			String appName;
 			int color;
@@ -263,12 +265,16 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 					color = rnd.nextInt();
 					color |= 0xFF000000;
 					colors.put(new JSONObject().put("app", appName).put("color", color));
+					newColor = true;
 				}
 			}
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		if(newColor)
+			storeColorsOfApps(colorsOfApps);
+		
 		return colorsOfApps;
 	}
 	

@@ -10,10 +10,12 @@ import org.json.JSONObject;
 import com.zehjot.smartday.data_access.DataSet;
 import com.zehjot.smartday.helper.Utilities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -190,7 +192,10 @@ public class TimeLineDetailView extends View {
 		getParent().requestLayout();
 		if(orderedApps!=null){
 			int height = (int) ((orderedApps.length)*textSize+(yOffset)*(orderedApps.length+1));
-			this.setLayoutParams(new LinearLayout.LayoutParams(500, height));
+			DisplayMetrics displaymetrics = new DisplayMetrics();
+			((Activity)getContext()).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+			int px = displaymetrics.widthPixels;
+			this.setLayoutParams(new LinearLayout.LayoutParams(px*3/5, height));
 		}
 		invalidate();
 	}
