@@ -242,6 +242,10 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			if(colors == null){
 				colorsOfApps.put("colors", new JSONArray());	
 				colors = colorsOfApps.optJSONArray("colors");
+				colors.put(new JSONObject()
+					.put("app","Other")
+					.put("color",0xFF00F0FF)							
+				);
 			}
 			String appName;
 			int color;
@@ -257,6 +261,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 				}
 				if(!found){
 					color = rnd.nextInt();
+					color |= 0xFF000000;
 					colors.put(new JSONObject().put("app", appName).put("color", color));
 				}
 			}
