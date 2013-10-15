@@ -16,7 +16,6 @@ import org.json.JSONObject;
 import com.zehjot.smartday.R;
 import com.zehjot.smartday.TabListener.OnUpdateListener;
 import com.zehjot.smartday.data_access.DataSet;
-import com.zehjot.smartday.data_access.DataSet.onDataAvailableListener;
 import com.zehjot.smartday.helper.Utilities;
 
 import android.app.Fragment;
@@ -32,7 +31,7 @@ import android.widget.LinearLayout;
 //import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class SectionChartFragment extends Fragment implements onDataAvailableListener, OnUpdateListener{
+public class SectionChartFragment extends Fragment implements OnUpdateListener{
 	private MyChart[] charts=null;
 	private static double minTimeinPercent = 0.05;
 	@Override
@@ -43,9 +42,7 @@ public class SectionChartFragment extends Fragment implements onDataAvailableLis
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if(getActivity().findViewById(R.id.options_fragment_container)==null){
-			inflater.inflate(R.menu.chart_menu, menu);
-		}
+		inflater.inflate(R.menu.chart_menu, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	
@@ -72,7 +69,7 @@ public class SectionChartFragment extends Fragment implements onDataAvailableLis
 			charts[i].removeHighlight();
 		}
 	}
-	@Override
+	
 	public void onDataAvailable(JSONObject[] jObjs, String request) {
 		LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.chart_1);
 		if(charts==null || charts.length!=jObjs.length){

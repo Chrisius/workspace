@@ -257,15 +257,16 @@ containing a value of this type.
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int ambilwarna_dialog=0x7f030001;
-        public static final int ambilwarna_pref_widget=0x7f030002;
-        public static final int dialog_auth=0x7f030003;
-        public static final int header_view=0x7f030004;
-        public static final int options_list=0x7f030005;
-        public static final int section_chart_fragment=0x7f030006;
-        public static final int section_list=0x7f030007;
-        public static final int section_map_fragment=0x7f030008;
-        public static final int section_timeline_fragment=0x7f030009;
+        public static final int activity_main_old=0x7f030001;
+        public static final int ambilwarna_dialog=0x7f030002;
+        public static final int ambilwarna_pref_widget=0x7f030003;
+        public static final int dialog_auth=0x7f030004;
+        public static final int header_view=0x7f030005;
+        public static final int options_list=0x7f030006;
+        public static final int section_chart_fragment=0x7f030007;
+        public static final int section_list=0x7f030008;
+        public static final int section_map_fragment=0x7f030009;
+        public static final int section_timeline_fragment=0x7f03000a;
     }
     public static final class menu {
         public static final int chart_menu=0x7f090000;

@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import com.zehjot.smartday.R;
 import com.zehjot.smartday.TabListener.OnUpdateListener;
 import com.zehjot.smartday.data_access.DataSet;
-import com.zehjot.smartday.data_access.DataSet.onDataAvailableListener;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -21,7 +20,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-public class SectionTimelineFragment extends Fragment implements OnUpdateListener,onDataAvailableListener{
+public class SectionTimelineFragment extends Fragment implements OnUpdateListener{
 	private JSONObject extra=null;
 	
 	@Override
@@ -34,9 +33,7 @@ public class SectionTimelineFragment extends Fragment implements OnUpdateListene
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if(getActivity().findViewById(R.id.options_fragment_container)==null){
-			inflater.inflate(R.menu.timeline_menu, menu);
-		}
+		inflater.inflate(R.menu.timeline_menu, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	
@@ -85,7 +82,6 @@ public class SectionTimelineFragment extends Fragment implements OnUpdateListene
 
 
 	}
-	@Override
 	public void onDataAvailable(JSONObject[] jObjs, String requestedFunction) {
 		ViewGroup root = (ViewGroup) getActivity().findViewById(R.id.timelinell);
 		

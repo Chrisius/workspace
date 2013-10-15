@@ -158,7 +158,7 @@ public class UserData {
 			ConnectivityManager connMgr = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 			if(networkInfo == null || !networkInfo.isConnected()){
-				Utilities.showDialog(activity.getString(R.string.info_no_data_connection), activity);
+				//Utilities.showDialog(activity.getString(R.string.info_no_data_connection), activity);
 				mCallBack.onUserDataAvailable(tmpUser);
 				return;
 			}

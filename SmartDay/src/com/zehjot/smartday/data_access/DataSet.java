@@ -287,6 +287,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			user = jObj;
 			tmpJSONResult = null;
 			tmpJSONResultToday = null;
+			instance.getApps((onDataAvailableListener) activity);
 		}
 	}
 

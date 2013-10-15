@@ -17,11 +17,12 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.res.Configuration;
 
 public class MainActivity extends Activity 
 		implements  DataSet.onDataAvailableListener	{
 	private FragmentManager fm;
-	private OptionsListFragment optionsListFragment;
+//	private OptionsListFragment optionsListFragment;
 	private static DataSet dataSet;
 	private boolean isRunning = true;
 	private static Activity activity;
@@ -204,18 +205,11 @@ public class MainActivity extends Activity
         }
 	}
 	
-	private void init(Bundle savedInstanceState){		
-    	optionsListFragment = (OptionsListFragment) fm.findFragmentByTag("optionsList");
-		if(optionsListFragment== null){
-	    	optionsListFragment = new OptionsListFragment();
-	    	if(findViewById(R.id.options_fragment_container)!=null)
-	    		fm.beginTransaction().add(R.id.options_fragment_container, optionsListFragment,"optionsList").commit();
-	    	else{
-				getActionBar().setDisplayShowTitleEnabled(false);
-				getActionBar().setDisplayShowHomeEnabled(false);        
-				
-
-	    	}
+	private void init(Bundle savedInstanceState){	
+		if (getResources().getConfiguration().screenLayout < 
+			        Configuration.SCREENLAYOUT_SIZE_LARGE) {
+			getActionBar().setDisplayShowTitleEnabled(false);
+			getActionBar().setDisplayShowHomeEnabled(false); 
 		}
         /**
          * Set Up Tabs
@@ -225,19 +219,19 @@ public class MainActivity extends Activity
         
         Tab tab = actionBar.newTab();
         tab.setText("MapView");
-        map = new TabListener<SectionMapFragment>(this, "mapView", SectionMapFragment.class, optionsListFragment);
+        map = new TabListener<SectionMapFragment>(this, "mapView", SectionMapFragment.class);
         tab.setTabListener(map);
         actionBar.addTab(tab);
         
         tab = actionBar.newTab();
         tab.setText("ChartView");
-        chart = new TabListener<SectionChartFragment>(this, "chartView", SectionChartFragment.class, optionsListFragment);
+        chart = new TabListener<SectionChartFragment>(this, "chartView", SectionChartFragment.class);
         tab.setTabListener(chart);
         actionBar.addTab(tab);
         
         tab = actionBar.newTab();
         tab.setText("Timeline");
-        time = new TabListener<SectionTimelineFragment>(this, "timeline", SectionTimelineFragment.class, optionsListFragment);
+        time = new TabListener<SectionTimelineFragment>(this, "timeline", SectionTimelineFragment.class);
         tab.setTabListener(time);
         actionBar.addTab(tab);
 

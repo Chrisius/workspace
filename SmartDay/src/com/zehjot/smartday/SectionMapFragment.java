@@ -47,9 +47,7 @@ public class SectionMapFragment extends MapFragment implements OnUpdateListener,
 	}
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if(getActivity().findViewById(R.id.options_fragment_container)==null){
-			inflater.inflate(R.menu.map_menu, menu);
-		}
+		inflater.inflate(R.menu.map_menu, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	

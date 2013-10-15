@@ -3,7 +3,7 @@
     <item 
         android:title="@string/options_actionbar_menutitle"
         android:showAsAction="always"
-        android:orderInCategory="101">
+        android:orderInCategory="80">
         <menu>    
             <item 
                	android:id="@+id/timespan"
