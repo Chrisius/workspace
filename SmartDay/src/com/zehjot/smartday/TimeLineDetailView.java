@@ -276,6 +276,8 @@ public class TimeLineDetailView extends View {
 		details.removeAllViews();
 		places.removeAllViews();
 		JSONArray apps = jObj.optJSONArray("result"); //find the JSONObj which represents appName
+		if(apps == null)
+			return;
 		JSONObject app=null;
 		for(int i=0;i<apps.length();i++){
 			if(apps.optJSONObject(i).optString("app").equals(appName)){

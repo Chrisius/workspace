@@ -52,7 +52,12 @@ public class SectionChartFragment extends Fragment implements onDataAvailableLis
 	@Override
 	public void onResume(){
 		super.onResume();
-		DataSet.getInstance(getActivity()).getApps((onDataAvailableListener) getActivity());	
+		onDataAvailable(DataSet.getInstance(getActivity()).getCachedDayData(), "");
+//		if(charts==null){
+//			Log.d("Charts", "if cace");
+//			DataSet.getInstance(getActivity()).getApps((onDataAvailableListener) getActivity());	
+//		}
+		//DataSet.getInstance(getActivity()).getApps((onDataAvailableListener) getActivity());	
 	}
 	@Override
 	public void onDestroy(){

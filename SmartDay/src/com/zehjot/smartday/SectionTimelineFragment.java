@@ -43,7 +43,12 @@ public class SectionTimelineFragment extends Fragment implements OnUpdateListene
 	@Override
 	public void onResume(){
 		super.onResume();
-		DataSet.getInstance(getActivity()).getApps((onDataAvailableListener) getActivity());	
+		onDataAvailable(DataSet.getInstance(getActivity()).getCachedDayData(), "");
+//		if(((ViewGroup) getActivity().findViewById(R.id.timelinell)).getChildCount()==0){
+//			Log.d("Timeline", "if cace");
+//			DataSet.getInstance(getActivity()).getApps((onDataAvailableListener) getActivity());			
+//		}
+		//DataSet.getInstance(getActivity()).getApps((onDataAvailableListener) getActivity());	
 	}
 	
 	public void onUpdate(JSONObject[] jObjs) {

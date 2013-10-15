@@ -45,19 +45,21 @@ public class UserData {
 	 * get  - gets name, pw, email
 	 * test - verifies login data with server
 	 */
-
+	
+	public UserData(Context context){
+		activity = (Activity) context;		
+	}
+	
 	public interface OnUserDataAvailableListener{
 		public void onUserDataAvailable(JSONObject jObj);
 	}
-	public void getUserLoginData(Context context){
-		getUserLoginData(context, false);
+	public void getUserLoginData(){
+		getUserLoginData(false);
 	}
-	public void getNewUserLoginData(Context context){
-		getUserLoginData(context, true);
+	public void getNewUserLoginData(){
+		getUserLoginData(true);
 	}
-	private void getUserLoginData(Context context, boolean createNew){
-		if(context != null)
-			activity = (Activity) context;
+	private void getUserLoginData(boolean createNew){
 		if(createNew || user == null){
 			mCallBack = (OnUserDataAvailableListener) DataSet.getInstance(activity);
 			File file = activity.getFileStreamPath(Security.sha1(activity.getString(R.string.user_file)));

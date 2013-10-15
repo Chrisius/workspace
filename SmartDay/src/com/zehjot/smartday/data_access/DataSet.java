@@ -44,12 +44,11 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	private static long endDate;
 	
 	private static int numberSelectedDays;
-	private static JSONObject[] days;
+	private static JSONObject[] days=null;
 	
 	public static class RequestedFunction{
 		public static final String getAllApps= "getAllApps";
 		public static final String getEventsAtDate= "getEventsAtDate";
-		public static final String initDataSet= "initDataSet";
 		public static final String updatedFilter= "updatedFilter";
 		public static final String getPositions = "getPositions";
 	}
@@ -80,9 +79,9 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	private static void init(Context context){
 		instance = new DataSet();
 		activity = (Activity) context;
-		createUserData();
 		selectedApps = new JSONObject();
 		selectedHighlightApps = new JSONObject();
+		startDate=endDate=Utilities.getTodayTimestamp();
 		if( activity.getFileStreamPath(activity.getString(R.string.file_ignored_apps)).exists()){
 			try {
 				ignoreApps = new JSONObject(Utilities.readFile(activity.getString(R.string.file_ignored_apps), activity));
@@ -102,24 +101,21 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			}
 		}else
 			colorsOfApps = new JSONObject();
-		tmpJSONResult = new JSONObject();
+		tmpJSONResult = new JSONObject();//TODO not capable of multi day support
 		tmpJSONResultToday = new JSONObject();
-	}
 
-	private static void initDate(){
-		startDate=endDate=Utilities.getTodayTimestamp();
-		instance.getApps(null);//TODO Notify in another way
+		createUserData();
 	}
 	
 	
 	private static void createUserData(){
 		if(userData==null)
-			userData = new UserData();
-		userData.getUserLoginData(activity);
+			userData = new UserData(activity);
+		userData.getUserLoginData();
 	}
 	
 	public void createNewUser(){
-		userData.getNewUserLoginData(activity);
+		userData.getNewUserLoginData();
 	}
 	
 	public interface onDataAvailableListener{
@@ -159,8 +155,6 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		}
 		if(listener != null)
 			getData(listener, RequestedFunction.getEventsAtDate, data);
-		else
-			getData(listener, RequestedFunction.initDataSet, data);
 	}
 	
 	public JSONObject getSelectedApps(){
@@ -288,7 +282,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	public void onUserDataAvailable(JSONObject jObj) {
 		if(user==null){//first call of DataSet
 			user = jObj;
-			initDate();
+			instance.getApps((onDataAvailableListener) activity);//TODO UGLY AS HELL
 		}else{
 			user = jObj;
 			tmpJSONResult = null;
@@ -306,6 +300,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	
 		if(jObj == null){
 			downloadTaskErrorHandler(jObj, serverResponse,requestedFunction);
+			dataReady(new JSONObject(), requestedFunction, requester);
 		}else{
 			if(requestedFunction.equals(RequestedFunction.getAllApps)){
 				if(requester!=null)					
@@ -325,14 +320,14 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 					dataReady(result, requestedFunction, requester);
 					return;				
 				}
-			}else if(requestedFunction.equals(RequestedFunction.initDataSet)){
+			/*}else if(requestedFunction.equals(RequestedFunction.initDataSet)){
 				JSONObject result = constructBasicJSONObj(jObj);
 				if(getSelectedDateEndAsTimestamp()==Utilities.getTodayTimestamp())
 					tmpJSONResultToday = result;
 				else
 					tmpJSONResult = result;
 				((onDataAvailableListener) activity).onDataAvailable(null, requestedFunction);
-				return;
+				return;*/
 			}else if(requestedFunction.equals(RequestedFunction.getPositions)){
 				requester.onDataAvailable(new JSONObject[]{constructPositionJSONObject(jObj)}, requestedFunction);
 			}
@@ -595,12 +590,11 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	}
 	private void getData(onDataAvailableListener requester, String requestedFunction, JSONObject jObj){
 		queryStart = Utilities.getSystemTime();
-		if(requestedFunction.equals(RequestedFunction.initDataSet)){
-			days=null;
+		/*if(requestedFunction.equals(RequestedFunction.initDataSet)){
 			String fileName = Utilities.getFileName(requestedFunction, user, jObj,activity);
 			String url = Utilities.getURL(Config.Request.events, jObj.toString(), user, activity);
 			new DownloadTask(requester,activity).execute(url,requestedFunction,fileName,jObj.optLong("start",1)+"");			
-		}else if(requestedFunction.equals(RequestedFunction.getAllApps)){
+		}else */if(requestedFunction.equals(RequestedFunction.getAllApps)){
 			String url = Utilities.getURL(Config.Request.values,jObj.toString(),user, activity);
 			if(Config.getDebug())
 				queryStart = Utilities.getSystemTime();
@@ -673,10 +667,9 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		if(networkInfo == null || !networkInfo.isConnected()){
 			Utilities.showDialog(activity.getString(R.string.info_no_data_connection),activity);
-			if(requestedFunction.equals(RequestedFunction.initDataSet))
-					((onDataAvailableListener) activity).onDataAvailable(null, requestedFunction);
+			/*if(requestedFunction.equals(RequestedFunction.initDataSet))
+					((onDataAvailableListener) activity).onDataAvailable(null, requestedFunction);*/
 			return;
-			//
 		}
 		if(jObj == null){
 			String errorMessage;

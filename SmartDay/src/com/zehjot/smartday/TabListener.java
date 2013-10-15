@@ -30,20 +30,22 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
         this.tag = tag;
         this.fragmentClass = fragmentClass;
         options = listener;
+		fragment = Fragment.instantiate(activity, fragmentClass.getName());
+		//fragment..add(R.id.section_fragment_container, fragment, tag);
     }
 
     public void onTabSelected(Tab tab, FragmentTransaction ft) {  	
-        if (fragment == null) {
-        	fragment = activity.getFragmentManager().findFragmentByTag(tag);
-        	if(fragment == null){
+        if (!fragment.isAdded()) {
+        	//fragment = activity.getFragmentManager().findFragmentByTag(tag);
+        	//if(fragment == null){
             	Log.d("TabSelected", "Fragment not found "+tag);
-        		fragment = Fragment.instantiate(activity, fragmentClass.getName());
+        		//fragment = Fragment.instantiate(activity, fragmentClass.getName());
         		ft.add(R.id.section_fragment_container, fragment, tag);
-        	}
+        	//}
         } else {
             ft.show(fragment);
-            if(fragment.isResumed())
-            	((OnUpdateListener) fragment).onUpdate(jObjs);            
+        	((OnUpdateListener) fragment).onUpdate(jObjs);   
+           // if(fragment.isResumed())         
         }
         options.onSectionSelected(tab.getPosition());
     }

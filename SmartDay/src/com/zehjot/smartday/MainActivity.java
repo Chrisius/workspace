@@ -42,6 +42,7 @@ public class MainActivity extends Activity
         if(savedInstanceState==null && dataSet!=null){
         	init(savedInstanceState);
         }else{
+        	init(null);
         	dataSet = DataSet.getInstance(this);   
         }
 
@@ -156,9 +157,9 @@ public class MainActivity extends Activity
     
 	@Override
 	public void onDataAvailable(JSONObject[] jObjs, String request) {
-		if(request.equals(DataSet.RequestedFunction.initDataSet)){
+		/*if(request.equals(DataSet.RequestedFunction.initDataSet)){
 			init(null);
-		}else if(request.equals(DataSet.RequestedFunction.getAllApps)){
+		}else*/ if(request.equals(DataSet.RequestedFunction.getAllApps)){
 			SelectAppsDialogFragment ignoreAppsDialog = new SelectAppsDialogFragment();
 			ignoreAppsDialog.setStrings(Utilities.jObjValuesToArrayList(jObjs).toArray(new String[0]));
 			ignoreAppsDialog.setMode(SelectAppsDialogFragment.IGNORE_APPS);
@@ -221,6 +222,7 @@ public class MainActivity extends Activity
          */        
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        
         Tab tab = actionBar.newTab();
         tab.setText("MapView");
         map = new TabListener<SectionMapFragment>(this, "mapView", SectionMapFragment.class, optionsListFragment);

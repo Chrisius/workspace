@@ -21,7 +21,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.zehjot.smartday.TabListener.OnUpdateListener;
 import com.zehjot.smartday.data_access.DataSet;
-import com.zehjot.smartday.data_access.DataSet.onDataAvailableListener;
 import com.zehjot.smartday.helper.Utilities;
 
 import android.os.Bundle;
@@ -82,7 +81,11 @@ public class SectionMapFragment extends MapFragment implements OnUpdateListener,
 	@Override
 	public void onResume() {
 		super.onResume();
-		DataSet.getInstance(getActivity()).getApps((onDataAvailableListener) getActivity());	
+		onDataAvailable(DataSet.getInstance(getActivity()).getCachedDayData(), "");
+//		if(marker == null){
+//			Log.d("MapView", "if cace");
+//			DataSet.getInstance(getActivity()).getApps((onDataAvailableListener) getActivity());
+//		}
 	}
 	
 	public void zoomTo(double lat, double lng, float zoom){
