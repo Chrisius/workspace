@@ -44,6 +44,7 @@ public class TimeLineDetailView extends View {
 	private String selectedApp;
 	
 	private GestureDetector tapDetector;
+	private boolean isVisible;
 	
 	public TimeLineDetailView(Context context) {
 		super(context);
@@ -56,7 +57,7 @@ public class TimeLineDetailView extends View {
 		mTextPaint.setColor(getResources().getColor(android.R.color.white));
 		
 		tapDetector = new GestureDetector(getContext(), new TapListener());
-		
+		isVisible =false;
 		selectedApp ="";
 	}
 
@@ -98,6 +99,7 @@ public class TimeLineDetailView extends View {
 			percent /= 100.f;
 			canvas.drawText(percent+"%", xpad+20+10+pxLongestWord+relativeBarLength*maxBarLength, ypad+(i+1)*textSize+(yOffset)*i, mTextPaint);
 		}
+		isVisible = true;
 	}
 	
 	@Override
@@ -235,6 +237,9 @@ public class TimeLineDetailView extends View {
 		selectedApp = app;
 		addDetails(app,-1);
 		invalidate();
+	}
+	public boolean isVisible(){
+		return isVisible;
 	}
 	private String getAppAtPos(MotionEvent e){
 		float ypad = (float) (getPaddingTop()+getPaddingBottom())+yOffset/2.f;
@@ -427,6 +432,7 @@ public class TimeLineDetailView extends View {
 		setId(1);
 		LinearLayout linearLayout = (LinearLayout)getParent().getParent();
 		((TimeLineView)linearLayout.getChildAt(0)).selectApp("");
-		linearLayout.removeView(linearLayout.getChildAt(1));		
+		linearLayout.removeView(linearLayout.getChildAt(1));
+		isVisible = false;
 	}
 }

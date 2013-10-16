@@ -457,6 +457,7 @@ public class TimeLineView extends View {
 		}
 		@Override
 		public boolean onDoubleTap(MotionEvent e) {
+			/*Doubletab to zoom in
 			Log.d("Gesture", "doubletap");
 			if(scaleFactor!=1.f){
 				scaleFactor =1.f;
@@ -467,26 +468,24 @@ public class TimeLineView extends View {
 				float time = ((e.getX()-offset-scrollX)/lineWidth)*24.f;
 				scrollX = e.getX()-time*((getWidth()*scaleFactor-2.f*offset)/24.f)-offset;
 			}
-			invalidate();
+			invalidate();*/
+			if(detail!=null&&detail.isVisible()){
+				detail.close();
+			}else{
+				addDetail();
+			}
 			return true;
 		}
 		
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent e) {
 			if(!scrollerKilled){ //needed so you dont tap if you want to stop the fling
-				float time = ((e.getX()-offset-scrollX)/lineWidth)*24.f;
-				Log.d("Time tapped",""+time);
-				JSONObject app;
-				time=-1;
-				selectedApp="";
-				app = getAppAtPos(e);
+				//float time = ((e.getX()-offset-scrollX)/lineWidth)*24.f;
+				//Log.d("Time tapped",""+time);
+				JSONObject app = getAppAtPos(e);
 				if(app!=null){
 					selectedApp = app.optString("app");
-					time = app.optInt("start");
-					selectedTime = (int) time;
-				}
-				//appSessionCount = getAppSessionCount(selectedApp);
-				if(!selectedApp.equals("")){
+					selectedTime = app.optInt("start");
 					invalidate();
 					addDetail();
 				}
