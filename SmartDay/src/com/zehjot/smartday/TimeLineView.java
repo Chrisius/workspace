@@ -187,30 +187,33 @@ public class TimeLineView extends View {
 		 * Line with hourdisplay
 		 */
 		for(int i=0;i<25;i++){
-			canvas.drawLine(offset+xpad+i*lineWidth/24.f, ypad+height*0.81f, offset+xpad+i*lineWidth/24.f, ypad+height*0.77f, mLinePaint);
-			if(i%2==0 || getWidth()*scaleFactor>=1400 || i==24)
-				canvas.drawText(""+i+":00", offset+xpad+i*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mTextPaint);
-			if(getWidth()*scaleFactor>=2878 && i!=24){
-				canvas.drawText(""+i+":30", offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mSubTextPaint);
-				canvas.drawLine(offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
-			}
-			if(getWidth()*scaleFactor>=5040 && i!=24){
-				canvas.drawLine(offset+xpad+(i+0.25f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.25f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
-				canvas.drawLine(offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
-				if(getWidth()*scaleFactor>=6500){
-					canvas.drawText(""+i+":15", offset+xpad+(i+0.25f)*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mSubTextPaint);
-					canvas.drawText(""+i+":45", offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mSubTextPaint);
+			if((offset+xpad+(i+1)*lineWidth/24.f)+scrollX>0&&(offset+xpad+(i-1)*lineWidth/24.f)+scrollX-getWidth()<0){
+				canvas.drawLine(offset+xpad+i*lineWidth/24.f, ypad+height*0.81f, offset+xpad+i*lineWidth/24.f, ypad+height*0.77f, mLinePaint);
+				if(i%2==0 || getWidth()*scaleFactor>=1400 || i==24)
+					canvas.drawText(""+i+":00", offset+xpad+i*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mTextPaint);
+				if(getWidth()*scaleFactor>=2878 && i!=24){
+					canvas.drawText(""+i+":30", offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mSubTextPaint);
+					canvas.drawLine(offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
 				}
-			}
-			if(getWidth()*scaleFactor>=8000 && i!=24){			
-				for(int j=1; j<=14;j++){
-					canvas.drawLine(offset+xpad+(i+0.0f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.0f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);
-					canvas.drawLine(offset+xpad+(i+0.25f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.25f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);
-					canvas.drawLine(offset+xpad+(i+0.5f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.5f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);
-					canvas.drawLine(offset+xpad+(i+0.75f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.75f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);					
+				if(getWidth()*scaleFactor>=5040 && i!=24){
+					canvas.drawLine(offset+xpad+(i+0.25f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.25f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
+					canvas.drawLine(offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
+					if(getWidth()*scaleFactor>=6500){
+						canvas.drawText(""+i+":15", offset+xpad+(i+0.25f)*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mSubTextPaint);
+						canvas.drawText(""+i+":45", offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mSubTextPaint);
+					}
+				}
+				if(getWidth()*scaleFactor>=8000 && i!=24){			
+					for(int j=1; j<=14;j++){
+						canvas.drawLine(offset+xpad+(i+0.0f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.0f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);
+						canvas.drawLine(offset+xpad+(i+0.25f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.25f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);
+						canvas.drawLine(offset+xpad+(i+0.5f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.5f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);
+						canvas.drawLine(offset+xpad+(i+0.75f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.75f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);					
+					}
 				}
 			}
 		}
+		
 		canvas.drawLine(offset+xpad, ypad+height*0.8f, offset+xpad+lineWidth, ypad+height*0.8f, mLinePaint);
 		/**
 		 * App Bars
