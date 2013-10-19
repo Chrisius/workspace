@@ -267,7 +267,7 @@ public class SectionMapFragment extends MapFragment implements OnUpdateListener,
 											}
 											break;
 										}else{
-											double tmpDist = distance(position.getDouble("lat"),position.getDouble("lng"),lat,lng);
+											double tmpDist = Utilities.distance(position.getDouble("lat"),position.getDouble("lng"),lat,lng);
 											if(tmpDist<distance||distance==-1){
 												distance=tmpDist;
 												nearestPosArrayInd=k;
@@ -451,23 +451,23 @@ public class SectionMapFragment extends MapFragment implements OnUpdateListener,
 		((MainActivity)getActivity()).switchTab(2, jObject);
 		
 	}
-	private double distance(double latA, double lngA, double latB, double lngB){
-		double f = 0.003352811;
-		double a = 6378.137;
-		double capitalF = (latA+latB)/2.0;
-		double capitalG = (latA-latB)/2.0;
-		double l = (lngA-lngB)/2.0;
-		capitalF = capitalF*(Math.PI/180.0);
-		capitalG = capitalG*(Math.PI/180.0);
-		l = l*(Math.PI/180.0);
-		double capitalS = Math.pow(Math.sin(capitalG),2)*Math.pow(Math.cos(l),2)+Math.pow(Math.cos(capitalF),2)*Math.pow(Math.sin(l),2);
-		double capitalC = Math.pow(Math.cos(capitalG),2)*Math.pow(Math.cos(l),2)+Math.pow(Math.sin(capitalF),2)*Math.pow(Math.sin(l),2);
-		double omega = Math.atan(Math.sqrt(capitalS/capitalC));
-		double capitalD = 2 * omega * a;
-		double capitalR = (Math.sqrt(capitalS*capitalC))/omega;
-		double capitalH1 = (3*capitalR-1)/(2*capitalC);
-		double capitalH2 = (3*capitalR+1)/(2*capitalS);
-		double dist = capitalD*(1+ f*capitalH1*Math.pow(Math.sin(capitalF),2)*Math.pow(Math.cos(capitalG),2) - f*capitalH2*Math.pow(Math.cos(capitalF),2)*Math.pow(Math.sin(capitalG),2));
-		return dist;
-	}
+//	private double distance(double latA, double lngA, double latB, double lngB){
+//		double f = 0.003352811;
+//		double a = 6378.137;
+//		double capitalF = (latA+latB)/2.0;
+//		double capitalG = (latA-latB)/2.0;
+//		double l = (lngA-lngB)/2.0;
+//		capitalF = capitalF*(Math.PI/180.0);
+//		capitalG = capitalG*(Math.PI/180.0);
+//		l = l*(Math.PI/180.0);
+//		double capitalS = Math.pow(Math.sin(capitalG),2)*Math.pow(Math.cos(l),2)+Math.pow(Math.cos(capitalF),2)*Math.pow(Math.sin(l),2);
+//		double capitalC = Math.pow(Math.cos(capitalG),2)*Math.pow(Math.cos(l),2)+Math.pow(Math.sin(capitalF),2)*Math.pow(Math.sin(l),2);
+//		double omega = Math.atan(Math.sqrt(capitalS/capitalC));
+//		double capitalD = 2 * omega * a;
+//		double capitalR = (Math.sqrt(capitalS*capitalC))/omega;
+//		double capitalH1 = (3*capitalR-1)/(2*capitalC);
+//		double capitalH2 = (3*capitalR+1)/(2*capitalS);
+//		double dist = capitalD*(1+ f*capitalH1*Math.pow(Math.sin(capitalF),2)*Math.pow(Math.cos(capitalG),2) - f*capitalH2*Math.pow(Math.cos(capitalF),2)*Math.pow(Math.sin(capitalG),2));
+//		return dist;
+//	}
 }

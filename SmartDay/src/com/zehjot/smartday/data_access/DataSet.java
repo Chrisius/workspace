@@ -522,27 +522,88 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 					);		
 					
 					
-					for(int j = 0; j<jArrayOutput.length();j++){
-						JSONArray appUsages = jArrayOutput.getJSONObject(j).getJSONArray("usage");
-						for(int k = 0; k<appUsages.length();k++){
-							JSONObject usage = appUsages.getJSONObject(k);
-							if(usage.has("start")&& usage.getLong("start")<=time && !usage.has("location")){
-								usage.put("location",location);
-							}else if(usage.has("start")&& usage.getLong("start")<=time && usage.has("end")&& usage.getLong("end")>=time){
-								usage.put("location",location);
-							}else if(usage.has("end")&& usage.getLong("end")>=time && !usage.has("location")){
-								usage.put("location",location);
-							}
-						}
+//					for(int j = 0; j<jArrayOutput.length();j++){
+//						JSONArray appUsages = jArrayOutput.getJSONObject(j).getJSONArray("usage");
+//						for(int k = 0; k<appUsages.length();k++){
+//							JSONObject usage = appUsages.getJSONObject(k);
+//							if(usage.has("start")&& usage.getLong("start")<=time && !usage.has("location")){
+//								usage.put("location",location);
+//							}else if(usage.has("start")&& usage.getLong("start")<=time && usage.has("end")&& usage.getLong("end")>=time){
+//								usage.put("location",location);
+//							}else if(usage.has("end")&& usage.getLong("end")>=time && !usage.has("location")){
+//								usage.put("location",location);
+//							}
+//						}
+//					}
+				}
+			}
+			
+			/**
+			 * Order Position Array in ascending order 
+			 */
+			JSONObject [] positionArray = new JSONObject[locations.length()];
+			for(int i = 0; i<locations.length();i++){	
+				positionArray[i] = locations.getJSONObject(i);
+			}
+			Arrays.sort(positionArray, new Comparator<JSONObject>() {
+				@Override
+				public int compare(JSONObject lhs, JSONObject rhs) {
+					int res= ((Long)lhs.optLong("timestamp", 0)).compareTo(rhs.optLong("timestamp",0));
+					return res;
+				}
+			});
+			/**
+			 * delete positions
+			 */
+			for(int i = 1;i<positionArray.length-1;i++){
+				//Position was visited at most 60 sec
+				if(positionArray[i]!=null&&positionArray[i+1]!=null&&positionArray[i-1]!=null){
+					if(positionArray[i+1].optLong("timestamp", 0)-positionArray[i].optLong("timestamp",0)<=60){
+						//Predecessor and Successor are the same location
+						if(positionArray[i-1].optDouble("lng")==positionArray[i+1].optDouble("lng")&&positionArray[i-1].optDouble("lat")==positionArray[i+1].optDouble("lat")){
+							positionArray[i]=null;
+						//Predecessor and Successor are less than 50 meter apart	
+						}else if(Utilities.distance(
+								positionArray[i-1].optDouble("lat", 0), 
+								positionArray[i-1].optDouble("lng", 0), 
+								positionArray[i+1].optDouble("lat", 0), 
+								positionArray[i+1].optDouble("lng", 0)
+								)<=0.05){
+							positionArray[i]=null;
+						}					
 					}
 				}
 			}
+			/**
+			 * add positions to usages
+			 */
 			for(int i = 0; i<jArrayOutput.length(); i++){					
 				JSONObject [] arrayOfJSONObjects = new JSONObject[jArrayOutput.getJSONObject(i).getJSONArray("usage").length()];
 				for(int j = 0; j < jArrayOutput.getJSONObject(i).getJSONArray("usage").length(); j++){
 					arrayOfJSONObjects[j] = jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j);
 					if(!jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).has("location")){
-						jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).put("location", lastKnownPos);
+						long start=jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).optLong("start", 0);
+						long end=jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).optLong("end", 0);
+						for(int k = 0; k<positionArray.length;k++){
+							if(positionArray[k]!=null&&start>=positionArray[k].optLong("timestamp", 1)){
+								//TODO add location
+								jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).put("location",
+								new JSONArray()
+									.put(
+										new JSONObject()
+											.put("key","lat")
+											.put("value", positionArray[k].optDouble("lat", 0))
+										)
+									.put(
+										new JSONObject()
+											.put("key", "lng")
+											.put("value", positionArray[k].optDouble("lng", 0))
+										)
+								);
+								break;
+							}
+						}
+						//jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).put("location", lastKnownPos);
 					}
 				}
 				Arrays.sort(arrayOfJSONObjects, new Comparator<JSONObject>() {
