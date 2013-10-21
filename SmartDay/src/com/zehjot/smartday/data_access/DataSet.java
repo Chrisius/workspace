@@ -424,7 +424,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	
 	private JSONObject constructBasicJSONObj(JSONObject jObj){
 		JSONArray jArrayInput=null;
-		JSONArray lastKnownPos = null;
+//		JSONArray lastKnownPos = null;
 		JSONArray jArrayOutput= new JSONArray();
 		JSONArray locations = new JSONArray();
 		JSONObject result=new JSONObject();
@@ -502,10 +502,11 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 				}else if(jObjInput.getString("type").equals("POSITION")){
 					long time = jObjInput.getLong("timestamp");
 					JSONArray location = jObjInput.getJSONArray("entities");
-					lastKnownPos = location;
+//					lastKnownPos = location;
 					/**
 					 * for separate location array
 					 */
+					
 					double lng=0;
 					double lat=0;
 					if(location.getJSONObject(0).getString("key").equals("lat")){
@@ -583,7 +584,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 					arrayOfJSONObjects[j] = jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j);
 					if(!jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).has("location")){
 						long start=jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).optLong("start", 0);
-						long end=jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).optLong("end", 0);
+//						long end=jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).optLong("end", 0);
 						for(int k = 0; k<positionArray.length;k++){
 							if(positionArray[k]!=null&&start>=positionArray[k].optLong("timestamp", 1)){
 								//TODO add location

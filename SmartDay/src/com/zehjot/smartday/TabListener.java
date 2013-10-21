@@ -34,7 +34,7 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
 		//fragment..add(R.id.section_fragment_container, fragment, tag);
     }
 
-    public void onTabSelected(Tab tab, FragmentTransaction ft) {  	
+    public void onTabSelected(Tab tab, FragmentTransaction ft) {  
         if (!fragment.isAdded()) {
         	//fragment = activity.getFragmentManager().findFragmentByTag(tag);
         	//if(fragment == null){
@@ -51,6 +51,10 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
     }
 
     public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+        int tabPosition = tab.getPosition();
+        if(tabPosition!= Tab.INVALID_POSITION){
+        	((MainActivity) activity).setLastTab(tabPosition);
+        }	
         if (fragment != null) {        	
             ft.hide(fragment);
         }

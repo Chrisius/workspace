@@ -156,6 +156,7 @@ public class Utilities{
 	public static void showDialog(String message, Activity activity){
 	
 		ShowDialogFragment dialog = new ShowDialogFragment();
+		dialog.setActivity(activity);
 		Bundle bundle = new Bundle();
 		bundle.putString("string", message);
 		dialog.setArguments(bundle);
@@ -163,9 +164,15 @@ public class Utilities{
 			dialog.show(activity.getFragmentManager(),"Dialog");
 	}
 	public static class ShowDialogFragment extends DialogFragment{
+		private Activity activity;
+		
+		public void setActivity(Activity activity) {
+			this.activity = activity;
+		}
+		
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getActivity());
+			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setMessage(getArguments().getString("string"))
 				.setCancelable(false)
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

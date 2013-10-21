@@ -10,6 +10,7 @@ import com.zehjot.smartday.helper.Security;
 import com.zehjot.smartday.helper.Utilities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,12 +30,17 @@ public class MainActivity extends Activity
 	private TabListener<SectionMapFragment> map;
 	private TabListener<SectionChartFragment> chart;
 	private TabListener<SectionTimelineFragment> time;
-	
+	private int lastTab = -1;
 	
 	
     public boolean isRunning(){
 		return isRunning;
 	}
+    
+    public void setLastTab(int tab){
+    	this.lastTab = tab;
+    }
+    
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,9 +85,20 @@ public class MainActivity extends Activity
         inflater.inflate(R.menu.main, menu);    	
     	return true;
     }
-    public static Activity getActivity() {
-		return activity;
-	}
+    
+    @Override
+    public void onBackPressed() {
+    	Log.d("Main Activity", "Back button pressed");
+
+    	if(lastTab != -1){
+    		getActionBar().setSelectedNavigationItem(lastTab);
+    		setLastTab(-1);
+    	}else{
+    		super.onBackPressed();
+    	}
+    }
+
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
     	super.onOptionsItemSelected(item);
@@ -235,6 +252,5 @@ public class MainActivity extends Activity
         tab.setTabListener(time);
         actionBar.addTab(tab);
 
-	
 	}
 }
