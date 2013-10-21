@@ -158,19 +158,35 @@ public class SectionMapFragment extends MapFragment implements OnUpdateListener,
 				for(int i=0;i<jObjs.length;i++){
 					JSONArray locations = jObjs[i].getJSONArray("locations");
 					for(int j=0;j<locations.length();j++){
-						
-					double lat = locations.getJSONObject(j).getDouble("lat");
-					double lng = locations.getJSONObject(j).getDouble("lng");
-					zoomLat =lat;
-					zoomLng =lng;
-					MarkerOptions markerOptions = new MarkerOptions()
-						.position(new LatLng(lat, lng))
-						.title(locations.getJSONObject(j).getLong("timestamp")+"!!..!!"+locations.getJSONObject(j).getLong("timestamp")+"!!..!!"+0);
-					
-					markerOptions.snippet("location");	
-					markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-					Marker mMarker = mMap.addMarker(markerOptions);					
-					markerList.add(mMarker);
+						double lat = locations.getJSONObject(j).getDouble("lat");
+						double lng = locations.getJSONObject(j).getDouble("lng");
+						boolean found = false;
+						for(int k = 0; k<marker.optJSONArray("positions").length();k++){
+							if(marker.optJSONArray("positions").getJSONObject(k).optDouble("lat",-1)==lat&&
+									marker.optJSONArray("positions").getJSONObject(k).optDouble("lng",-1)==lng){
+								found = true;
+								break;
+							}
+						}
+						if(!found){
+							zoomLat =lat;
+							zoomLng =lng;
+							MarkerOptions markerOptions = new MarkerOptions()
+								.position(new LatLng(lat, lng))
+								.title(locations.getJSONObject(j).getLong("timestamp")+"!!..!!"+locations.getJSONObject(j).getLong("timestamp")+"!!..!!"+0);
+							if(j>0&&j<locations.length()-1){
+								markerOptions.snippet("Dist to successor: "+(int)(Utilities.distance(lat, lng, locations.getJSONObject(j-1).getDouble("lat"), locations.getJSONObject(j-1).getDouble("lng"))*1000)+" meter"+"!!..!!"+
+								"Dist to predecessor: "+(int)(Utilities.distance(lat, lng, locations.getJSONObject(j+1).getDouble("lat"), locations.getJSONObject(j+1).getDouble("lng"))*1000)+" meter");	
+							}else if(j>0){
+								markerOptions.snippet("Dist to successor: "+(int)(Utilities.distance(lat, lng, locations.getJSONObject(j-1).getDouble("lat"), locations.getJSONObject(j-1).getDouble("lng"))*1000)+" meter");
+							}else if(j<locations.length()-1){
+								markerOptions.snippet("Dist to predecessor: "+(int)(Utilities.distance(lat, lng, locations.getJSONObject(j+1).getDouble("lat"), locations.getJSONObject(j+1).getDouble("lng"))*1000)+" meter");	
+							}
+							
+							markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+							Marker mMarker = mMap.addMarker(markerOptions);					
+							markerList.add(mMarker);
+						}
 					}
 				}
 				
