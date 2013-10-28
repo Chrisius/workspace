@@ -174,7 +174,7 @@ public class TimeLineView extends View {
 		lineWidth -= 2.f*offset;
 		debugDrawCounter +=1;
 		if(!debug){
-			canvas.drawText(Utilities.getDateWithDay(date), xpad-scrollX+10, ypad+mTextSize, mDebugTextPaint);
+			canvas.drawText(Utilities.getDateWithDay(date)+", Total time "+Utilities.getTimeAsString((long) (jObj.optLong("totalDuration",0))), xpad-scrollX+10, ypad+mTextSize, mDebugTextPaint);
 			if(((LinearLayout)getParent()).getChildAt(1)!=null){
 				canvas.drawText("Doubletap below to close details", xpad-scrollX+10, height-mTextSize, mDebugTextPaint); 	
 			}else{			

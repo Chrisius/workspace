@@ -208,7 +208,8 @@ containing a value of this type.
         public static final int common_signin_btn_text_pressed_dark=0x7f02001b;
         public static final int common_signin_btn_text_pressed_light=0x7f02001c;
         public static final int ic_launcher=0x7f02001d;
-        public static final int square=0x7f02001e;
+        public static final int show_location_icon=0x7f02001e;
+        public static final int square=0x7f02001f;
     }
     public static final class id {
         public static final int action_about=0x7f060029;

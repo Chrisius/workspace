@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -303,7 +304,7 @@ public class TimeLineDetailView extends View {
 		TextView header = createTextView("Total time:"+"\n"+"    "+Utilities.getTimeAsString(app.optLong("duration")));
 		header.setPadding(10, 0, 10, 2);
 	    details.addView(header);
-	    header = createTextView("Locations:"+"\n"+"    ");
+	    header = createTextView("Locations:");
 		header.setPadding(10, 0, 10, 2);
 	    places.addView(header);
 		JSONArray usages = app.optJSONArray("usage"); //iterate over all usages 
@@ -397,10 +398,19 @@ public class TimeLineDetailView extends View {
 			    	}
 		    	}
 		    }
-		    view = createTextView("show location");
-		    view.setOnClickListener(new LocationClickListener(lng, lat, appUsage.optLong("start")));
-		    view.setPadding(10, 11, 10, 18);//TODO maybe not just trail and error...
-		    places.addView(view);
+		    ImageView imageview = new ImageView(getContext());		    
+		    imageview.setOnClickListener(new LocationClickListener(lng, lat, appUsage.optLong("start")));
+		//    imageview.setPadding(0, 11, 0, 18);
+		    imageview.setLayoutParams(new LayoutParams(
+	            120,
+	           70));
+		    imageview.setImageResource(R.drawable.show_location_icon);
+		    imageview.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+		    places.addView(imageview);
+//		    view = createTextView("show location");
+//		    view.setOnClickListener(new LocationClickListener(lng, lat, appUsage.optLong("start")));
+//		    view.setPadding(10, 11, 10, 18);//TODO maybe not just trail and error...
+//		    places.addView(view);
 		}		
 	}
 	private class LocationClickListener implements View.OnClickListener{

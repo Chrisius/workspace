@@ -126,10 +126,11 @@ public class MainActivity extends Activity
 			String[] list = getFilesDir().list();
 			for(int i=0; i<list.length;i++){
 			File file = new File(getFilesDir(),list[i]);
-				if(file.equals(new File(getFilesDir(),Security.sha1(getString(R.string.user_file)))))
-					Utilities.showDialog(item.toString()+item.getItemId(), this);
-				else
-					file.delete();			
+				if(!file.equals(new File(getFilesDir(),Security.sha1(getString(R.string.user_file)))))
+					file.delete();
+//					Utilities.showDialog(item.toString()+item.getItemId(), this);
+//				else
+//					file.delete();			
 			}
 			break;
 		case R.id.action_new_user:

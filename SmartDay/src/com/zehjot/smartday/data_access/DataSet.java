@@ -559,7 +559,9 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			for(int i = 1;i<positionArray.length-1;i++){
 				//Position was visited at most 60 sec
 				if(positionArray[i]!=null&&positionArray[i+1]!=null&&positionArray[i-1]!=null){
-					if(positionArray[i+1].optLong("timestamp", 0)-positionArray[i].optLong("timestamp",0)<=60){
+
+//					long testDebug = positionArray[i+1].optLong("timestamp", 0)-positionArray[i].optLong("timestamp",0);
+					if(positionArray[i+1].optLong("timestamp", 0)-positionArray[i].optLong("timestamp",0)<=120){
 						//Predecessor and Successor are the same location
 						if(positionArray[i-1].optDouble("lng")==positionArray[i+1].optDouble("lng")&&positionArray[i-1].optDouble("lat")==positionArray[i+1].optDouble("lat")){
 							positionArray[i]=null;
@@ -601,7 +603,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 											.put("value", positionArray[k].optDouble("lng", 0))
 										)
 								);
-								break;
+							//	break;
 							}
 						}
 						//jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).put("location", lastKnownPos);
