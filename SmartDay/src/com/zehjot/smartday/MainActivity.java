@@ -225,7 +225,7 @@ public class MainActivity extends Activity
 	
 	private void init(Bundle savedInstanceState){	
 		if (getResources().getConfiguration().screenLayout < 
-			        Configuration.SCREENLAYOUT_SIZE_LARGE) {
+			        Configuration.SCREENLAYOUT_SIZE_NORMAL) {
 			getActionBar().setDisplayShowTitleEnabled(false);
 			getActionBar().setDisplayShowHomeEnabled(false); 
 		}

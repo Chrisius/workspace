@@ -424,7 +424,6 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	
 	private JSONObject constructBasicJSONObj(JSONObject jObj){
 		JSONArray jArrayInput=null;
-//		JSONArray lastKnownPos = null;
 		JSONArray jArrayOutput= new JSONArray();
 		JSONArray locations = new JSONArray();
 		JSONObject result=new JSONObject();
@@ -502,7 +501,6 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 				}else if(jObjInput.getString("type").equals("POSITION")){
 					long time = jObjInput.getLong("timestamp");
 					JSONArray location = jObjInput.getJSONArray("entities");
-//					lastKnownPos = location;
 					/**
 					 * for separate location array
 					 */
@@ -521,21 +519,6 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 						.put("lng",lng)
 						.put("lat", lat)						
 					);		
-					
-					
-//					for(int j = 0; j<jArrayOutput.length();j++){
-//						JSONArray appUsages = jArrayOutput.getJSONObject(j).getJSONArray("usage");
-//						for(int k = 0; k<appUsages.length();k++){
-//							JSONObject usage = appUsages.getJSONObject(k);
-//							if(usage.has("start")&& usage.getLong("start")<=time && !usage.has("location")){
-//								usage.put("location",location);
-//							}else if(usage.has("start")&& usage.getLong("start")<=time && usage.has("end")&& usage.getLong("end")>=time){
-//								usage.put("location",location);
-//							}else if(usage.has("end")&& usage.getLong("end")>=time && !usage.has("location")){
-//								usage.put("location",location);
-//							}
-//						}
-//					}
 				}
 			}
 			
@@ -577,6 +560,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 					}
 				}
 			}
+			
 			/**
 			 * add positions to usages
 			 */
@@ -584,30 +568,24 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 				JSONObject [] arrayOfJSONObjects = new JSONObject[jArrayOutput.getJSONObject(i).getJSONArray("usage").length()];
 				for(int j = 0; j < jArrayOutput.getJSONObject(i).getJSONArray("usage").length(); j++){
 					arrayOfJSONObjects[j] = jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j);
-				//	if(!jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).has("location")){
-						long start=jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).optLong("start", 0);
-//						long end=jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).optLong("end", 0);
-						for(int k = 0; k<positionArray.length;k++){
-							if(positionArray[k]!=null&&(start>=positionArray[k].optLong("timestamp", 1)||!jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).has("location"))){
-								//TODO add location
-								jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).put("location",
-								new JSONArray()
-									.put(
-										new JSONObject()
-											.put("key","lat")
-											.put("value", positionArray[k].optDouble("lat", 0))
-										)
-									.put(
-										new JSONObject()
-											.put("key", "lng")
-											.put("value", positionArray[k].optDouble("lng", 0))
-										)
-								);
-							//	break;
-							}
+					long start=jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).optLong("start", 0);
+					for(int k = 0; k<positionArray.length;k++){
+						if(positionArray[k]!=null&&(start>=positionArray[k].optLong("timestamp", 1)||!jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).has("location"))){
+							jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).put("location",
+							new JSONArray()
+								.put(
+									new JSONObject()
+										.put("key","lat")
+										.put("value", positionArray[k].optDouble("lat", 0))
+									)
+								.put(
+									new JSONObject()
+										.put("key", "lng")
+										.put("value", positionArray[k].optDouble("lng", 0))
+									)
+							);
 						}
-						//jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).put("location", lastKnownPos);
-					//}
+					}
 				}
 				Arrays.sort(arrayOfJSONObjects, new Comparator<JSONObject>() {
 					@Override
@@ -788,6 +766,11 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			} catch (JSONException e) {
 				Utilities.showDialog("Error occured while trying to read server error, no reason stated.",activity);
 			}
+		}
+	}
+	private void analyzePosition(JSONObject[] positions){
+		for(int i=0; i<positions.length; i++){
+			
 		}
 	}
 }

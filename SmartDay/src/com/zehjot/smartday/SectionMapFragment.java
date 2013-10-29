@@ -464,6 +464,7 @@ public class SectionMapFragment extends MapFragment implements OnUpdateListener,
 		for(int i=0; i<apps.length;i++){
 			tv= new TextView(getActivity());
 			tv.setText("  "+apps[i]);
+			tv.setTextSize(Config.getTextSize(getActivity()));
 			tv.setTextColor(getResources().getColor(android.R.color.black));
 			ll.addView(tv);			
 		}

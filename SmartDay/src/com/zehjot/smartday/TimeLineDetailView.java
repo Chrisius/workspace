@@ -51,7 +51,7 @@ public class TimeLineDetailView extends View {
 	
 	public TimeLineDetailView(Context context) {
 		super(context);
-		textSize = 18;
+		textSize = Config.getTextSize((Activity)getContext());
 		yOffset = textSize/3.f;
 		xOffset = 20; //was 20
 		
@@ -262,7 +262,7 @@ public class TimeLineDetailView extends View {
 		header.setLayoutParams(new TableRow.LayoutParams(
 				TableRow.LayoutParams.WRAP_CONTENT,
 				TableRow.LayoutParams.WRAP_CONTENT));
-		header.setTextSize(18);
+		header.setTextSize(Config.getTextSize((Activity)getContext()));
 		header.setTextColor(getResources().getColor(android.R.color.white));
 		header.setGravity(Gravity.CENTER_VERTICAL);
 		return header;
