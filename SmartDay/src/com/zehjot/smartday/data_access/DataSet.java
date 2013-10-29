@@ -584,11 +584,11 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 				JSONObject [] arrayOfJSONObjects = new JSONObject[jArrayOutput.getJSONObject(i).getJSONArray("usage").length()];
 				for(int j = 0; j < jArrayOutput.getJSONObject(i).getJSONArray("usage").length(); j++){
 					arrayOfJSONObjects[j] = jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j);
-					if(!jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).has("location")){
+				//	if(!jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).has("location")){
 						long start=jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).optLong("start", 0);
 //						long end=jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).optLong("end", 0);
 						for(int k = 0; k<positionArray.length;k++){
-							if(positionArray[k]!=null&&start>=positionArray[k].optLong("timestamp", 1)){
+							if(positionArray[k]!=null&&(start>=positionArray[k].optLong("timestamp", 1)||!jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).has("location"))){
 								//TODO add location
 								jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).put("location",
 								new JSONArray()
@@ -607,7 +607,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 							}
 						}
 						//jArrayOutput.getJSONObject(i).getJSONArray("usage").getJSONObject(j).put("location", lastKnownPos);
-					}
+					//}
 				}
 				Arrays.sort(arrayOfJSONObjects, new Comparator<JSONObject>() {
 					@Override

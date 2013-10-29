@@ -20,13 +20,17 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 //import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -214,12 +218,10 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 			date = jObj.optLong("dateTimestamp");
 			processData(jObj);
 			LinearLayout appNames =(LinearLayout) getActivity().findViewById(R.id.chart_appNames);
-			LinearLayout appTimes =(LinearLayout) getActivity().findViewById(R.id.chart_time);
-			LinearLayout appLocations =(LinearLayout) getActivity().findViewById(R.id.chart_location);
+			TableLayout appDetails = (TableLayout) getActivity().findViewById(R.id.chart_details);
 			if(highlight){
 				appNames.removeAllViews();
-				appTimes.removeAllViews();
-				appLocations.removeAllViews();
+				appDetails.removeAllViews();
 			}
 			rendererToArrayIndex = new JSONObject();
 			otherRendererToArrayIndex = new JSONArray();
@@ -356,11 +358,9 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 		}
 		private void addDetail(int selectedSeries){
 			LinearLayout appNames =(LinearLayout) getActivity().findViewById(R.id.chart_appNames);
-			LinearLayout appTimes =(LinearLayout) getActivity().findViewById(R.id.chart_time);
-			LinearLayout appLocations =(LinearLayout) getActivity().findViewById(R.id.chart_location);
+			TableLayout appDetails = (TableLayout) getActivity().findViewById(R.id.chart_details);
 			appNames.removeAllViews();
-			appTimes.removeAllViews();
-			appLocations.removeAllViews();
+			appDetails.removeAllViews();
 			
 			
 			if(apps.length<1)
@@ -385,120 +385,10 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 								apps.getChildAt(i).setBackgroundResource(0);
 							}
 							v.setBackgroundResource(android.R.color.holo_blue_dark);
-							LinearLayout appTimes =(LinearLayout) getActivity().findViewById(R.id.chart_time);
-							LinearLayout appLocations =(LinearLayout) getActivity().findViewById(R.id.chart_location);
-							appTimes.removeAllViews();
-							appLocations.removeAllViews();
-							JSONObject app = getTimesOfApp(appName);
-							JSONArray appUsages = app.optJSONArray("usage");
-							if(appUsages==null)
-								return;
-							/**
-							 * Header
-							 */
-							TextView header = getView("Total time:"+"\n"+"    "+Utilities.getTimeAsString(app.optInt("duration")));
-							header.setPadding(10, 5, 10, 5);
-							appTimes.addView(header);
-						    header = getView("Locations:"+"\n"+"    ");
-							header.setPadding(10, 5, 11, 5);
-							appLocations.addView(header);
-						    
-							for(int i = 0; i<appUsages.length();i++){
-								/**
-								 * Time and duration
-								 */
-								JSONObject appUsage = appUsages.optJSONObject(i);
-								long start = appUsage.optLong("start",-1);
-								long end = appUsage.optLong("end",-1);
-								if(end ==-1){
-									end = start;
-								}
-								long duration = end-start;
-								TextView view = getView("Used at "+ Utilities.getTimeFromTimeStamp(start));
-								view.setOnClickListener(new View.OnClickListener() {									
-									@Override
-									public void onClick(View v) {
-										String time = ((TextView)v).getText().toString();
-										String times[] = time.split("Used at ");
-										times = times[1].split(":");
-										for(int i=0;i<times.length;i++){
-											Log.d("Time Strings",times[i]);
-										}
-										int h = Integer.valueOf(times[0]);
-										int m = Integer.valueOf(times[1]);
-										int s = Integer.valueOf(times[2]);
-										int timestamp = h*60*60 + m*60 + s;
-										JSONObject jObject = new JSONObject();
-										try {
-											jObject.put("time", timestamp).put("app", selectedApp ).put("date", date);
-										} catch (JSONException e) {
-											e.printStackTrace();
-										}
-										((MainActivity)getActivity()).switchTab(2, jObject);
-										Log.d("Time selected",""+timestamp);
-										
-									}
-								});
+							TableLayout table = (TableLayout) getActivity().findViewById(R.id.chart_details);
+							table.removeAllViews();
+							addAppDetails(appName, table);
 
-								view.setPadding(10, 5, 10, 0);
-								view.setId((i*2));
-								appTimes.addView(view);
-							
-							    view = getView("    for "+Utilities.getTimeAsString(duration));				
-							    view.setOnClickListener(new View.OnClickListener() {									
-									@Override
-									public void onClick(View v) {
-										int id = v.getId();
-										v = ((LinearLayout)v.getParent()).findViewById(id-1);
-										String time = ((TextView)v).getText().toString();
-										String times[] = time.split("Used at ");
-										times = times[1].split(":");
-										for(int i=0;i<times.length;i++){
-											Log.d("Time Strings",times[i]);
-										}
-										int h = Integer.valueOf(times[0]);
-										int m = Integer.valueOf(times[1]);
-										int s = Integer.valueOf(times[2]);
-										int timestamp = h*60*60 + m*60 + s;
-										JSONObject jObject = new JSONObject();
-										try {
-											jObject.put("time", timestamp).put("app", selectedApp ).put("date", date);
-										} catch (JSONException e) {
-											e.printStackTrace();
-										}
-										((MainActivity)getActivity()).switchTab(2, jObject);
-										Log.d("Time selected",""+timestamp);
-										
-									}
-								});
-								view.setPadding(10, 0, 10, 5);
-								view.setId((i*2)+1);						    
-								appTimes.addView(view);
-								
-							    /**
-							     * Locations
-							     */
-							    JSONArray location = appUsage.optJSONArray("location");
-							    double lat=0;
-							    double lng=0;
-							    if(location!=null){
-							    	JSONObject tmpJObj = location.optJSONObject(0);
-							    	if(tmpJObj!=null){
-								    	if(tmpJObj.optString("key").equals("lat")){
-								    		lat=tmpJObj.optDouble("value");
-								    		lng=location.optJSONObject(1).optDouble("value");
-								    	}else{
-								    		lng=tmpJObj.optDouble("value");
-								    		lat=location.optJSONObject(1).optDouble("value");
-								    	}
-							    	}
-							    }
-							    view = getView("show location");
-							    view.setOnClickListener(new LocationClickListener(lng, lat, appUsage.optLong("start")));
-							    view.setPadding(10, 11, 10, 24);//TODO maybe not just trail and error...
-							    appLocations.addView(view);
-							}
-							
 						}
 					});
 				    appNames.addView(valueTV);
@@ -512,118 +402,79 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 				String appName = ((TextView)valueTV).getText().toString();
 				selectedApp = appName;
 				valueTV.setBackgroundResource(android.R.color.holo_blue_dark);
-				JSONObject app = getTimesOfApp(appName);
-				if(app == null)
-					return;
-				JSONArray appUsages = app.optJSONArray("usage");				
-				if(appUsages==null)
-					return;
-				/**
-				 * Header
-				 */
-				TextView header = getView("Total time:"+"\n"+"    "+Utilities.getTimeAsString(app.optInt("duration")));
-				header.setPadding(10, 5, 10, 5);
-			    appTimes.addView(header);
-			    header = getView("Locations:"+"\n"+"    ");
-				header.setPadding(10, 5, 11, 5);
-				appLocations.addView(header);
-			    
-				for(int i = 0; i<appUsages.length();i++){
-					/**
-					 * Time and duration
-					 */
-					JSONObject appUsage = appUsages.optJSONObject(i);
-					long start = appUsage.optLong("start",-1);
-					long end = appUsage.optLong("end",-1);
-					if(end ==-1){
-						end = start;
-					}
-					long duration = end-start;
-					TextView view = getView("Used at "+ Utilities.getTimeFromTimeStamp(start));					
-					view.setOnClickListener(new View.OnClickListener() {									
-						@Override
-						public void onClick(View v) {
-							String time = ((TextView)v).getText().toString();
-							String times[] = time.split("Used at ");
-							times = times[1].split(":");
-							for(int i=0;i<times.length;i++){
-								Log.d("Time Strings",times[i]);
-							}
-							int h = Integer.valueOf(times[0]);
-							int m = Integer.valueOf(times[1]);
-							int s = Integer.valueOf(times[2]);
-							int timestamp = h*60*60 + m*60 + s;
-							JSONObject jObject = new JSONObject();
-							try {
-								jObject.put("time", timestamp).put("app", selectedApp ).put("date", date);
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
-							((MainActivity)getActivity()).switchTab(2, jObject);
-							Log.d("Time selected",""+timestamp);
-							
-						}
-					});
-					view.setPadding(10, 5, 10, 0);
-					view.setId((i*2));
-				    appTimes.addView(view);
-				    
-				    view = getView("    for "+Utilities.getTimeAsString(duration));		    
-				    view.setOnClickListener(new View.OnClickListener() {									
-						@Override
-						public void onClick(View v) {
-							int id = v.getId();
-							v = ((LinearLayout)v.getParent()).findViewById(id-1);
-							String time = ((TextView)v).getText().toString();
-							String times[] = time.split("Used at ");
-							times = times[1].split(":");
-							for(int i=0;i<times.length;i++){
-								Log.d("Time Strings",times[i]);
-							}
-							int h = Integer.valueOf(times[0]);
-							int m = Integer.valueOf(times[1]);
-							int s = Integer.valueOf(times[2]);
-							int timestamp = h*60*60 + m*60 + s;
-							JSONObject jObject = new JSONObject();
-							try {
-								jObject.put("time", timestamp).put("app", selectedApp ).put("date", date);
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
-							((MainActivity)getActivity()).switchTab(2, jObject);
-							Log.d("Time selected",""+timestamp);
-							
-						}
-					});
-					view.setPadding(10, 0, 10, 5);
-					view.setId((i*2)+1);				    
-				    appTimes.addView(view);
-				    /**
-				     * Locations
-				     */
-				    JSONArray location = appUsage.optJSONArray("location");
-				    double lat=0;
-				    double lng=0;
-				    if(location!=null){
-				    	JSONObject tmpJObj = location.optJSONObject(0);
-				    	if(tmpJObj!=null){
-					    	if(tmpJObj.optString("key").equals("lat")){
-					    		lat=tmpJObj.optDouble("value");
-					    		lng=location.optJSONObject(1).optDouble("value");
-					    	}else{
-					    		lng=tmpJObj.optDouble("value");
-					    		lat=location.optJSONObject(1).optDouble("value");
-					    	}
-				    	}
-				    }
-				    view = getView("show location");
-				    view.setOnClickListener(new LocationClickListener(lng, lat, appUsage.optLong("start")));
-				    view.setPadding(10, 11, 10, 24);// maybe not just trail and error...
-				    appLocations.addView(view);
-				}
-				
+				addAppDetails(appName, appDetails);
 			}
 		}
+		private void addAppDetails(String appName,TableLayout table){
+			JSONObject app = getTimesOfApp(appName);				
+			if(app == null||app.optJSONArray("usage")==null)
+				return;
+			JSONArray usages = app.optJSONArray("usage");		
+			/**
+			 * Time and duration with onClickListener
+			 */	
+			TextView header = createTextView("Total time:"+"\n"+"    "+Utilities.getTimeAsString(app.optLong("duration")));
+			TableRow row = new TableRow(getActivity());
+			row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,TableLayout.LayoutParams.WRAP_CONTENT));
+			row.addView(header);
+		    header = createTextView("Locations:");
+			row.addView(header);
+			table.addView(row);
+			for(int i=0;i<usages.length();i++){
+				JSONObject appUsage = usages.optJSONObject(i);
+				long start = appUsage.optLong("start");
+				long duration = appUsage.optLong("end")-start;
+				TextView view = createTextView("Used at "+ Utilities.getTimeFromTimeStamp(start)+"\n"+"    for "+Utilities.getTimeAsString(duration));
+				start = Utilities.getSecondsOfDay(start);
+				view.setOnClickListener(new TimespanClickListener((int) start));
+				row = new TableRow(getActivity());
+				row.addView(view);
+			    table.addView(row);
+			    
+			    /**
+			     * Locations
+			     */
+			    JSONArray location = appUsage.optJSONArray("location");
+			    double lat=0;
+			    double lng=0;
+			    if(location!=null){
+			    	JSONObject tmpJObj = location.optJSONObject(0);
+			    	if(tmpJObj!=null){
+				    	if(tmpJObj.optString("key").equals("lat")){
+				    		lat=tmpJObj.optDouble("value");
+				    		lng=location.optJSONObject(1).optDouble("value");
+				    	}else{
+				    		lng=tmpJObj.optDouble("value");
+				    		lat=location.optJSONObject(1).optDouble("value");
+				    	}
+			    	}
+			    }
+			    ImageView imageview = new ImageView(getActivity());		    
+			    imageview.setOnClickListener(new LocationClickListener(lng, lat, appUsage.optLong("start")));
+			    imageview.setLayoutParams(new TableRow.LayoutParams(
+			       0,
+		           TableRow.LayoutParams.MATCH_PARENT));
+			    imageview.setImageResource(R.drawable.show_location_icon);
+			    imageview.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+			    row.addView(imageview);
+			}	
+		
+		}
+		private TextView createTextView(String headerString){			
+			TextView header = new TextView(getActivity());
+			header.setText(headerString);
+			header.setLayoutParams(new TableRow.LayoutParams(
+					TableRow.LayoutParams.WRAP_CONTENT,
+					TableRow.LayoutParams.WRAP_CONTENT));
+			header.setTextSize(18);
+			header.setTextColor(getResources().getColor(android.R.color.white));
+			header.setGravity(Gravity.CENTER_VERTICAL);
+			return header;
+		}
+		
+		
+		
+		
 		private JSONObject getTimesOfApp(String appName){
 			/**
 			 * returns
@@ -692,5 +543,27 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 			}
 			
 		}
+		private class TimespanClickListener implements View.OnClickListener{	
+			private int startDayTime=0;
+			
+			public TimespanClickListener(int startDayTime) {
+				this.startDayTime = startDayTime;
+			}
+			
+			@Override
+			public void onClick(View v) {
+				
+				JSONObject jObject = new JSONObject();
+				try {
+					jObject.put("time", startDayTime).put("app", selectedApp ).put("date", date);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+				((MainActivity)getActivity()).switchTab(2, jObject);
+			}
+			
+		}
 	}
 }
+

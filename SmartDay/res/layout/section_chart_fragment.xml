@@ -32,27 +32,16 @@
 					    	android:orientation="vertical"
 					        android:layout_width="wrap_content"
 						   	android:layout_height="wrap_content"/>
-				       </ScrollView>
+				    </ScrollView>
 			    
 					<ScrollView
 					    android:layout_width="wrap_content"
 					    android:layout_height="fill_parent"
-					    android:fillViewport="true">		
-				        <LinearLayout 
-					    	android:orientation="horizontal"
-					        android:layout_width="wrap_content"
-						   	android:layout_height="wrap_content">
-					        <LinearLayout 
-						        android:id="@+id/chart_time"
-						    	android:orientation="vertical"
-						        android:layout_width="wrap_content"
-							   	android:layout_height="wrap_content"/>
-					        <LinearLayout 
-						        android:id="@+id/chart_location"
-						    	android:orientation="vertical"
-						        android:layout_width="wrap_content"
-							   	android:layout_height="wrap_content"/>
-					   </LinearLayout>
+					    android:fillViewport="true">
+				        <TableLayout 
+				            android:id="@+id/chart_details"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"/>
 				   </ScrollView>
 		        </LinearLayout>
 	</HorizontalScrollView>

@@ -212,11 +212,11 @@ containing a value of this type.
         public static final int square=0x7f02001f;
     }
     public static final class id {
-        public static final int action_about=0x7f050029;
-        public static final int action_blacklist=0x7f050025;
-        public static final int action_color_apps=0x7f050028;
-        public static final int action_delete_files=0x7f050026;
-        public static final int action_new_user=0x7f050027;
+        public static final int action_about=0x7f050028;
+        public static final int action_blacklist=0x7f050024;
+        public static final int action_color_apps=0x7f050027;
+        public static final int action_delete_files=0x7f050025;
+        public static final int action_new_user=0x7f050026;
         public static final int ambilwarna_cursor=0x7f05000e;
         public static final int ambilwarna_dialogView=0x7f05000a;
         public static final int ambilwarna_pref_widget_kotak=0x7f050013;
@@ -234,12 +234,11 @@ containing a value of this type.
         public static final int auth_user_pass=0x7f050016;
         public static final int chart_1=0x7f05001b;
         public static final int chart_appNames=0x7f05001c;
-        public static final int chart_location=0x7f05001e;
-        public static final int chart_time=0x7f05001d;
-        public static final int highlight_apps=0x7f05002a;
+        public static final int chart_details=0x7f05001d;
+        public static final int highlight_apps=0x7f050029;
         public static final int hybrid=0x7f050004;
         public static final int left=0x7f050005;
-        public static final int map_container=0x7f050020;
+        public static final int map_container=0x7f05001f;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
         public static final int option_header=0x7f050019;
@@ -248,13 +247,13 @@ containing a value of this type.
         public static final int right=0x7f050006;
         public static final int satellite=0x7f050002;
         public static final int section_fragment_container=0x7f050008;
-        public static final int section_list_fragment=0x7f05001f;
-        public static final int select_apps=0x7f050024;
+        public static final int section_list_fragment=0x7f05001e;
+        public static final int select_apps=0x7f050023;
         public static final int terrain=0x7f050003;
-        public static final int timelinell=0x7f050022;
-        public static final int timelinescroll=0x7f050021;
+        public static final int timelinell=0x7f050021;
+        public static final int timelinescroll=0x7f050020;
         public static final int timelineview=0x7f050007;
-        public static final int timespan=0x7f050023;
+        public static final int timespan=0x7f050022;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
