@@ -22,7 +22,6 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -265,6 +264,7 @@ public class TimeLineDetailView extends View {
 				TableRow.LayoutParams.WRAP_CONTENT));
 		header.setTextSize(18);
 		header.setTextColor(getResources().getColor(android.R.color.white));
+		header.setGravity(Gravity.CENTER_VERTICAL);
 		return header;
 	}
 
@@ -276,24 +276,9 @@ public class TimeLineDetailView extends View {
 			
 			TableLayout table = new TableLayout(getContext());
 			scrollView.addView(table);
-			
-//			LinearLayout horizLL = new LinearLayout(getContext());
-//			horizLL.setOrientation(LinearLayout.HORIZONTAL);
-//			scrollView.addView(horizLL);
-//			LinearLayout tmp = new LinearLayout(getContext());
-//			tmp.setOrientation(LinearLayout.VERTICAL);
-//			horizLL.addView(tmp);
-//			tmp = new LinearLayout(getContext());
-//			tmp.setOrientation(LinearLayout.VERTICAL);
-//			horizLL.addView(tmp);
 			layout.addView(scrollView);
 		}
 		TableLayout table = (TableLayout) ((ViewGroup) layout.getChildAt(1)).getChildAt(0);
-//		TableLayout table = (TableLayout) layout.getChildAt(0);
-//		LinearLayout details = (LinearLayout) layout.getChildAt(0);
-//		LinearLayout places = (LinearLayout) layout.getChildAt(1);
-//		details.removeAllViews();
-//		places.removeAllViews();
 		table.removeAllViews();
 
 		JSONArray apps = jObj.optJSONArray("result"); //find the JSONObj which represents appName
@@ -312,15 +297,10 @@ public class TimeLineDetailView extends View {
 		 * Time and duration with onClickListener
 		 */	
 		TextView header = createTextView("Total time:"+"\n"+"    "+Utilities.getTimeAsString(app.optLong("duration")));
-		//header.setPadding(10, 0, 10, 2);
 		TableRow row = new TableRow(getContext());
 		row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,TableLayout.LayoutParams.WRAP_CONTENT));
-		row.setGravity(Gravity.CENTER_VERTICAL);//TODO WRONG
 		row.addView(header);
-//	    details.addView(header);
 	    header = createTextView("Locations:");
-		//header.setPadding(10, 0, 10, 2);
-//	    places.addView(header);
 		row.addView(header);
 		table.addView(row);
 		JSONArray usages = app.optJSONArray("usage"); //iterate over all usages 
@@ -330,74 +310,13 @@ public class TimeLineDetailView extends View {
 			long duration = appUsage.optLong("end")-start;
 			TextView view = createTextView("Used at "+ Utilities.getTimeFromTimeStamp(start)+"\n"+"    for "+Utilities.getTimeAsString(duration));
 			start = Utilities.getSecondsOfDay(start);
-			view.setOnClickListener(new View.OnClickListener() {			
-				//TODO NEW ONCLICK LISTENER!
-				@Override
-				public void onClick(View v) {					
-					v.setBackgroundResource(android.R.color.holo_blue_dark);
-					String time = ((TextView)v).getText().toString();
-					String times[] = time.split("Used at ");
-					times = times[0].split(":");
-					for(int i=0;i<times.length;i++){
-						Log.d("Time Strings",times[i]);
-					}
-					int h = Integer.valueOf(times[0]);
-					int m = Integer.valueOf(times[1]);
-					int s = Integer.valueOf(times[2]);
-					int timestamp = h*60*60 + m*60 + s;
-					LinearLayout linearLayout = (LinearLayout)getParent().getParent();
-					((TimeLineView)linearLayout.getChildAt(0)).selectApp(timestamp);
-					int id = v.getId();
-					v = ((LinearLayout)v.getParent()).findViewById(id+1);
-					v.setBackgroundResource(android.R.color.holo_blue_dark);
-				}
-			});
-			view.setPadding(10, 2, 10, 0);
-			view.setId((i*2));
+			view.setOnClickListener(new TimespanClickListener((int) start));
 			if(time==start)
 				view.setBackgroundResource(android.R.color.holo_blue_dark);
 			row = new TableRow(getContext());
 			row.addView(view);
 		    table.addView(row);
-		
-//		    view = createTextView("    for "+Utilities.getTimeAsString(duration));					
-//		    view.setOnClickListener(new View.OnClickListener() {									
-//				@Override
-//				public void onClick(View v) {
-//					LinearLayout apps = (LinearLayout)v.getParent();
-//					for(int i=0;i<apps.getChildCount();i++){
-//						apps.getChildAt(i).setBackgroundResource(0);
-//					}
-//					
-//					v.setBackgroundResource(android.R.color.holo_blue_dark);
-//					int id = v.getId();
-//					v = ((LinearLayout)v.getParent()).findViewById(id-1);
-//					v.setBackgroundResource(android.R.color.holo_blue_dark);
-//					String time = ((TextView)v).getText().toString();
-//					String times[] = time.split("Used at ");
-//					times = times[1].split(":");
-//					for(int i=0;i<times.length;i++){
-//						Log.d("Time Strings",times[i]);
-//					}
-//					int h = Integer.valueOf(times[0]);
-//					int m = Integer.valueOf(times[1]);
-//					int s = Integer.valueOf(times[2]);
-//					int timestamp = h*60*60 + m*60 + s;
-//					LinearLayout linearLayout = (LinearLayout)getParent().getParent();
-//					((TimeLineView)linearLayout.getChildAt(0)).selectApp(timestamp);
-//					
-//				}
-//			});
-//			view.setPadding(10, 0, 10, 2);
-//			view.setId((i*2)+1);					
-//			if(time==start)
-//				view.setBackgroundResource(android.R.color.holo_blue_dark);	
-//
-//			row = new TableRow(getContext());
-//			row.addView(view);
-//		    table.addView(row);
-//		    details.addView(view);
-//		    view.getHeight();
+		    
 		    /**
 		     * Locations
 		     */
@@ -418,17 +337,12 @@ public class TimeLineDetailView extends View {
 		    }
 		    ImageView imageview = new ImageView(getContext());		    
 		    imageview.setOnClickListener(new LocationClickListener(lng, lat, appUsage.optLong("start")));
-		//    imageview.setPadding(0, 11, 0, 18);
 		    imageview.setLayoutParams(new TableRow.LayoutParams(
-	            120,
-	           70));
+		       0,
+	           TableRow.LayoutParams.MATCH_PARENT));
 		    imageview.setImageResource(R.drawable.show_location_icon);
 		    imageview.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 		    row.addView(imageview);
-//		    view = createTextView("show location");
-//		    view.setOnClickListener(new LocationClickListener(lng, lat, appUsage.optLong("start")));
-//		    view.setPadding(10, 11, 10, 18);//TODO maybe not just trail and error...
-//		    places.addView(view);
 		}		
 	}
 	private class LocationClickListener implements View.OnClickListener{
@@ -453,6 +367,28 @@ public class TimeLineDetailView extends View {
 				e.printStackTrace();
 			}
 			((MainActivity)getContext()).switchTab(0, jObject);
+		}
+		
+	}
+	
+	private class TimespanClickListener implements View.OnClickListener{	
+		private int startDayTime=0;
+		
+		public TimespanClickListener(int startDayTime) {
+			this.startDayTime = startDayTime;
+		}
+		
+		@Override
+		public void onClick(View v) {
+			TableRow row = (TableRow)v.getParent();
+			TableLayout table = (TableLayout) row.getParent();
+			for(int i=0;i<table.getChildCount();i++){
+				row = (TableRow) table.getChildAt(i);
+				row.getChildAt(0).setBackgroundResource(0);
+			}
+			v.setBackgroundResource(android.R.color.holo_blue_dark);
+			LinearLayout linearLayout = (LinearLayout)getParent().getParent();
+			((TimeLineView)linearLayout.getChildAt(0)).selectApp(startDayTime);
 		}
 		
 	}
