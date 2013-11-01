@@ -769,8 +769,54 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		}
 	}
 	private void analyzePosition(JSONObject[] positions){
-		for(int i=0; i<positions.length; i++){
-			
+		try{
+			JSONObject poi = getPOI();
+			if(poi == null){
+				poi = new JSONObject();
+				poi.put("poiArray", 
+						new JSONArray()
+				);
+			}
+			for(int i=0; i<positions.length; i++){
+				
+			}
+		}catch(JSONException e){
+			e.printStackTrace();
 		}
+	}
+	/**
+	 * {
+	 * 	"pois":
+	 * 		[
+	 * 		 {// should contain points in a radius of 50 - 100 meters
+	 * 		  "lat": double
+	 * 		  "lng": double
+	 *		  "visited": int
+	 *		  "days":
+	 *				[
+	 *				 {
+	 *				  "day":int,//From 0-6, 0=Monday,6=Sunday
+	 *				  "occ":int,//number of times this point was visited at the given weekday
+	 *				  "duration":int,//total amount of time in sec regardless of the timespans
+	 *				  "times":
+	 *					[
+	 *					 {
+	 *					  //new start and end time should be +/- 30min from the average time
+	 *					  "start":int//time of day in sec, stores the average start time
+	 *					  "end":int//analog to start
+	 *					  "times":int //number of times this timespan was seen
+	 *					 },
+	 *					 ...
+	 *					]
+	 *				 },
+	 *				 ...
+	 *				]
+	 * 		 }
+	 * 		]
+	 * }
+	 * @return
+	 */
+	private JSONObject getPOI(){
+		return null;
 	}
 }
