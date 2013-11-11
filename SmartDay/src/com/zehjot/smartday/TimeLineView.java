@@ -36,7 +36,7 @@ public class TimeLineView extends View {
 	private Paint mRectanglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private Paint mDebugTextPaint = new Paint();
 	private int debugDrawCounter = 0;
-	private float mTextSize = 16.f;
+	private float mTextSize = Config.getTextSize((Activity) getContext());
 	private float scaleFactor = 1.f;
 	private ScaleGestureDetector zoomDetector;
 	private GestureDetector scrollDetector;

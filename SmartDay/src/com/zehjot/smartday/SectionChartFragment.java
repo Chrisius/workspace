@@ -27,6 +27,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -281,6 +282,8 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 				renderer.setClickEnabled(true);
 				renderer.setInScroll(true);
 				renderer.setChartTitle(Utilities.getDateWithDay(date)+", Total time "+Utilities.getTimeAsString((long) (totaltime*60)));
+				renderer.setChartTitleTextSize(Config.getTextSize(getActivity()));
+				renderer.setLabelsTextSize(Config.getTextSize(getActivity()));
 				chartView = ChartFactory.getPieChartView(getActivity(), categories, renderer);	
 				chartView.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -388,7 +391,8 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 							TableLayout table = (TableLayout) getActivity().findViewById(R.id.chart_details);
 							table.removeAllViews();
 							addAppDetails(appName, table);
-
+							HorizontalScrollView sv = (HorizontalScrollView) getActivity().findViewById(R.id.chart_details_scroll);
+							sv.scrollBy(sv.getRight(), 0);
 						}
 					});
 				    appNames.addView(valueTV);
@@ -466,7 +470,7 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 			header.setLayoutParams(new TableRow.LayoutParams(
 					TableRow.LayoutParams.WRAP_CONTENT,
 					TableRow.LayoutParams.WRAP_CONTENT));
-			header.setTextSize(18);
+			header.setTextSize(Config.getTextSize(getActivity()));
 			header.setTextColor(getResources().getColor(android.R.color.white));
 			header.setGravity(Gravity.CENTER_VERTICAL);
 			return header;
@@ -513,7 +517,7 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 			header.setLayoutParams(new LayoutParams(
 		            LayoutParams.MATCH_PARENT,
 		            LayoutParams.WRAP_CONTENT));
-			header.setTextSize(18);
+			header.setTextSize(Config.getTextSize(getActivity()));
 			header.setTextColor(getResources().getColor(android.R.color.white));
 			return header;
 		}
