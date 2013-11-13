@@ -602,6 +602,12 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			}
 			result.put("result", jArrayOutput);
 			result.put("totalDuration", totalDuration);
+			locations = new JSONArray();
+			for(int i=0; i<positionArray.length;i++){
+				if(positionArray[i]!=null){
+					locations.put(positionArray[i]);
+				}
+			}			
 			result.put("locations",locations);
 		}catch(JSONException e){
 			e.printStackTrace();			
@@ -770,7 +776,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	}
 	private void analyzePosition(JSONObject[] positions){
 		try{
-			JSONObject poi = getPOI();
+			JSONObject poi = null;
 			if(poi == null){
 				poi = new JSONObject();
 				poi.put("poiArray", 
@@ -816,7 +822,16 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	 * }
 	 * @return
 	 */
-	private JSONObject getPOI(){
-		return null;
+	public int getPOI(double lat, double lng){
+		Random rnd= new Random();
+		int res = rnd.nextInt(10);
+		switch (res) {
+		case 1:
+			return 1;
+		case 2:
+			return 2;
+		default:
+			return 3;
+		}
 	}
 }

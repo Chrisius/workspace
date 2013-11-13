@@ -22,10 +22,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Scroller;
-/**
- * Dont put inside scrollview or else the timeline cant be scrolled and zooming works like crap
- *
- */
+
 public class TimeLineView extends View {
 	private boolean debug = false;
 	
@@ -54,6 +51,7 @@ public class TimeLineView extends View {
 	private int selectedTime=-1;
 	
 	private JSONArray rectangles;
+	private JSONArray positionLabels;
 	private JSONObject jObj;
 	private JSONObject extra;
 	private int appSessionCount=0;
@@ -183,6 +181,24 @@ public class TimeLineView extends View {
 		}
 		else
 			canvas.drawText("height="+this.getHeight()+" width="+this.getWidth()+" calls="+debugDrawCounter+" scale="+scaleFactor+" scrollX="+scrollX+" Selected App= "+selectedApp+" AppSessions="+appSessionCount, xpad-scrollX, ypad+mTextSize, mDebugTextPaint);
+		float pxForSecond = lineWidth/(24.f*60.f*60.f);
+		/**
+		 * Label position
+		 */
+		for(int i=0;i<positionLabels.length();i++){
+			JSONObject label = positionLabels.optJSONObject(i);
+			int start = label.optInt("start");
+			int end = label.optInt("end");
+			int labelID = label.optInt("label");
+			canvas.drawLine(offset+xpad+start*pxForSecond, ypad+height*0.2f, offset+xpad+end*pxForSecond, ypad+height*0.2f, mLinePaint);
+			canvas.drawLine(offset+xpad+start*pxForSecond, ypad+height*0.2f, offset+xpad+start*pxForSecond, ypad+height*0.22f, mLinePaint);
+			if(mSubTextPaint.measureText(""+labelID)<(end-start)*pxForSecond){
+				canvas.drawText(""+labelID, offset+xpad+((start+end)/2.f)*pxForSecond-2, ypad+height*0.21f, mSubTextPaint);
+			}
+			if(positionLabels.length()-1==i){
+				canvas.drawLine(offset+xpad+end*pxForSecond, ypad+height*0.2f, offset+xpad+end*pxForSecond, ypad+height*0.22f, mLinePaint);				
+			}
+		}
 		/**
 		 * Line with hourdisplay
 		 */
@@ -219,7 +235,7 @@ public class TimeLineView extends View {
 		 * App Bars
 		 */
 		if(rectangles!=null){
-			float pxForSecond = lineWidth/(24.f*60.f*60.f);
+			//float pxForSecond = lineWidth/(24.f*60.f*60.f);
 			int startInSec;
 			int endInSec;
 			String appName;
@@ -293,6 +309,7 @@ public class TimeLineView extends View {
 			int startInSec;
 			int endInSec;
 			JSONObject selectedApps = DataSet.getInstance(getContext()).getSelectedApps();
+			//Construct rectangles
 			for(int i=0; i<jObj.getJSONArray("result").length();i++){				
 				JSONObject app = jObj.getJSONArray("result").getJSONObject(i);
 				appName = app.getString("app");
@@ -310,6 +327,40 @@ public class TimeLineView extends View {
 					}
 				}
 			}
+			//construct position labels
+			positionLabels = new JSONArray();
+			positionLabels.put(
+					new JSONObject()
+					.put("start",0));
+			int lastLabel = -2;
+			int label = -1;
+			double lng=0;
+			double lat=0;
+			long time=0;
+			for(int i=0;i<jObj.optJSONArray("locations").length();i++){
+				JSONObject location = jObj.optJSONArray("locations").optJSONObject(i);
+				lng = location.optDouble("lng");
+				lat = location.optDouble("lat");
+				time = Utilities.getSecondsOfDay(location.optLong("timestamp"));
+				label = DataSet.getInstance(getContext()).getPOI(lat, lng);
+				if(label != lastLabel){
+					if(positionLabels.length()==1){//case for first object
+						positionLabels.getJSONObject(positionLabels.length()-1).put("label",label);
+					}
+					positionLabels.getJSONObject(positionLabels.length()-1).put("end",time);
+					positionLabels.put(new JSONObject().put("start",time).put("label",label));					
+					lastLabel = label;
+				}
+				if(i==jObj.optJSONArray("locations").length()-1){
+					if(date==Utilities.getTodayTimestamp()){
+						positionLabels.getJSONObject(positionLabels.length()-1).put("end",Utilities.getSecondsOfDay(Utilities.getSystemTime()/1000));
+					}else{
+						positionLabels.getJSONObject(positionLabels.length()-1).put("end",24*60*60);
+					}
+				}
+			}
+			
+			
 			if(this.getParent()!=null&&((LinearLayout)getParent()).getChildAt(1)!=null){
 				if(jObj.getJSONArray("result").length()==0)
 					((TimeLineDetailView)((LinearLayout)((LinearLayout)this.getParent()).getChildAt(1)).getChildAt(0)).close();
@@ -584,4 +635,5 @@ public class TimeLineView extends View {
 		detail.setData(jObj);
 		detail.selectApp(selectedApp,selectedTime);
 	}
+	
 }
