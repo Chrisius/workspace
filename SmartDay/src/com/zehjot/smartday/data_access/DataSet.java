@@ -39,6 +39,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	private static long todayCacheMin = 5*60*1000;
 	private static JSONObject colorsOfApps = null;
 	private static boolean changedIgnoreApps=false;
+	private static JSONObject pointsOfInterest = null;
 	
 	private static long startDate;
 	private static long endDate;
@@ -101,6 +102,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			}
 		}else
 			colorsOfApps = new JSONObject();
+		
 		tmpJSONResult = new JSONObject();//TODO not capable of multi day support
 		tmpJSONResultToday = new JSONObject();
 
@@ -293,6 +295,25 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	public void onUserDataAvailable(JSONObject jObj) {
 		if(user==null){//first call of DataSet
 			user = jObj;
+			if( activity.getFileStreamPath(user.toString()+"poi").exists()){
+				try {
+					pointsOfInterest = new JSONObject(Utilities.readFile(user.toString()+"poi", activity));
+				} catch (JSONException e) {
+					e.printStackTrace();
+					pointsOfInterest = null;
+				}
+			}else{
+				
+				pointsOfInterest = new JSONObject();
+				try {
+					pointsOfInterest.put("poiArray", 
+							new JSONArray()
+					);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			instance.getApps((onDataAvailableListener) activity);//TODO UGLY AS HELL
 		}else{
 			user = jObj;
@@ -560,7 +581,6 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 					}
 				}
 			}
-			
 			/**
 			 * add positions to usages
 			 */
@@ -609,6 +629,13 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 				}
 			}			
 			result.put("locations",locations);
+			/**
+			 * analyze positions
+			 */
+			if(jObj.getLong("date")!=Utilities.getTodayTimestamp()){
+				analyzePosition(positionArray);
+			}
+			
 		}catch(JSONException e){
 			e.printStackTrace();			
 		}
@@ -775,19 +802,75 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		}
 	}
 	private void analyzePosition(JSONObject[] positions){
+		/**
+		 * to delete null values
+		 */
+		int newArraySize=positions.length;
+		for(int i = 0; i < positions.length;i++){
+			if(positions[i]==null)
+				newArraySize--;
+		}
+		JSONObject[] tmp =  new JSONObject[newArraySize];
+		int j =0;
+		for(int i=0;i< positions.length;i++){
+			if(positions[i]!=null){
+				tmp[j]=positions[i];
+				j++;
+			}
+		}
+		positions = tmp;
 		try{
-			JSONObject poi = null;
-			if(poi == null){
-				poi = new JSONObject();
-				poi.put("poiArray", 
+			if(pointsOfInterest == null){
+				pointsOfInterest = new JSONObject();
+				pointsOfInterest.put("poiArray", 
 						new JSONArray()
 				);
 			}
-			for(int i=0; i<positions.length; i++){
-				
+			for(int i=0; i<positions.length-1; i++){
+				if(positions[i+1].getLong("timestamp")-positions[i].getLong("timestamp")>900){
+					extendPOI(positions[i], positions[i+1].getLong("timestamp"), 0.5);
+				}
 			}
 		}catch(JSONException e){
 			e.printStackTrace();
+		}
+		Utilities.writeFile(user.toString()+"poi", pointsOfInterest.toString(), activity);
+	}
+	private boolean extendPOI(JSONObject position, long nextPositionTimestamp,double dist){
+		try{
+			int index = -1;
+			double newLat = position.getDouble("lat");
+			double newLng = position.getDouble("lng");
+			double newTimestamp = position.getLong("timestamp");
+			JSONArray pois = pointsOfInterest.getJSONArray("poiArray");
+			for(int i = 0; i<pois.length();i++){
+				double lng = pois.getJSONObject(i).getDouble("lng");
+				double lat = pois.getJSONObject(i).getDouble("lat");
+//				long timestamp = pois.getJSONObject(i).getLong("timestamp");
+				if(Utilities.distance(lng, lat, newLat, newLng)<dist){
+					index = i;
+					dist = Utilities.distance(lng, lat, newLat, newLng);
+				}
+			}
+			if(index != -1){
+				int duration = pois.getJSONObject(index).getInt("duration");
+				int visitations = pois.getJSONObject(index).getInt("visitations");
+				pois.getJSONObject(index).put("duration",duration+nextPositionTimestamp-newTimestamp);
+				pois.getJSONObject(index).put("visitations",visitations+1);
+				return true;
+			}else{
+				pois.put(
+					new JSONObject()
+					.put("lat", newLat)
+					.put("lng", newLng)
+					.put("visitations",1)
+					.put("id", pois.length())
+					.put("duration", nextPositionTimestamp-newTimestamp)
+						);
+				return true;
+			}
+		}catch(JSONException e){
+			return false;
 		}
 	}
 	/**
@@ -797,7 +880,9 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	 * 		 {// should contain points in a radius of 50 - 100 meters
 	 * 		  "lat": double
 	 * 		  "lng": double
-	 *		  "visited": int
+	 *		  "visitations": int
+	 *		  "duration":int
+	 *		  "id":int
 	 *		  "days":
 	 *				[
 	 *				 {
@@ -823,15 +908,19 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 	 * @return
 	 */
 	public int getPOI(double lat, double lng){
-		Random rnd= new Random();
-		int res = rnd.nextInt(10);
-		switch (res) {
-		case 1:
-			return 1;
-		case 2:
-			return 2;
-		default:
-			return 3;
+		try {
+			JSONArray pois = pointsOfInterest.getJSONArray("poiArray");
+			for(int i=0;i<pois.length();i++){
+				JSONObject poi = pois.getJSONObject(i);
+				double poiLat = poi.getDouble("lat");
+				double poiLng = poi.getDouble("lng");
+				if(Utilities.distance(lat, lng, poiLat, poiLng)<=0.5){
+					return poi.getInt("id");
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+		return -1;
 	}
 }
