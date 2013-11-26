@@ -33,7 +33,7 @@ public class TimeLineView extends View {
 	private Paint mRectanglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private Paint mDebugTextPaint = new Paint();
 	private int debugDrawCounter = 0;
-	private float mTextSize = Config.getTextSize((Activity) getContext());
+	private float mTextSize = Config.getTextSizeInPx((Activity) getContext());
 	private float scaleFactor = 1.f;
 	private ScaleGestureDetector zoomDetector;
 	private GestureDetector scrollDetector;
@@ -58,6 +58,7 @@ public class TimeLineView extends View {
 	
 	private TimeLineDetailView detail;
 	private long date;
+	
 	
 	public TimeLineView(Context context) {
 		super(context);
@@ -87,6 +88,7 @@ public class TimeLineView extends View {
         mScrollAnimator.addUpdateListener(new AnimatorTick());
         rectangles = new JSONArray();        
 		detail=null;
+		
 	}
 	
 	@Override
@@ -173,11 +175,11 @@ public class TimeLineView extends View {
 		debugDrawCounter +=1;
 		if(!debug){
 			canvas.drawText(Utilities.getDateWithDay(date)+", Total time "+Utilities.getTimeAsString((long) (jObj.optLong("totalDuration",0))), xpad-scrollX+10, ypad+mTextSize, mDebugTextPaint);
-			if(((LinearLayout)getParent()).getChildAt(1)!=null){
+			/*if(((LinearLayout)getParent()).getChildAt(1)!=null){
 				canvas.drawText("Doubletap below to close details", xpad-scrollX+10, height-mTextSize, mDebugTextPaint); 	
 			}else{			
 				canvas.drawText("Tap on a bar to open details", xpad-scrollX+10, height-mTextSize, mDebugTextPaint); 
-			}
+			}*/
 		}
 		else
 			canvas.drawText("height="+this.getHeight()+" width="+this.getWidth()+" calls="+debugDrawCounter+" scale="+scaleFactor+" scrollX="+scrollX+" Selected App= "+selectedApp+" AppSessions="+appSessionCount, xpad-scrollX, ypad+mTextSize, mDebugTextPaint);
@@ -202,16 +204,19 @@ public class TimeLineView extends View {
 		/**
 		 * Line with hourdisplay
 		 */
+		
+		float timelabel = mSubTextPaint.measureText("99:99")*1.5f;
+		float numberOfTimelabels=getWidth()*scaleFactor/timelabel;
 		for(int i=0;i<25;i++){
 			if((offset+xpad+(i+1)*lineWidth/24.f)+scrollX>0&&(offset+xpad+(i-1)*lineWidth/24.f)+scrollX-getWidth()<0){
 				canvas.drawLine(offset+xpad+i*lineWidth/24.f, ypad+height*0.81f, offset+xpad+i*lineWidth/24.f, ypad+height*0.77f, mLinePaint);
-				if(i%2==0 || getWidth()*scaleFactor>=1400 || i==24)
+				if(i%((int)(25/numberOfTimelabels)+1)==0 || i==24)
 					canvas.drawText(""+i+":00", offset+xpad+i*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mTextPaint);
-				if(getWidth()*scaleFactor>=2878 && i!=24){
+				if(numberOfTimelabels>=52 && i!=24){
 					canvas.drawText(""+i+":30", offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mSubTextPaint);
 					canvas.drawLine(offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
 				}
-				if(getWidth()*scaleFactor>=5040 && i!=24){
+				if(numberOfTimelabels>=108 && i!=24){
 					canvas.drawLine(offset+xpad+(i+0.25f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.25f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
 					canvas.drawLine(offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
 					if(getWidth()*scaleFactor>=6500){
@@ -219,7 +224,7 @@ public class TimeLineView extends View {
 						canvas.drawText(""+i+":45", offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mSubTextPaint);
 					}
 				}
-				if(getWidth()*scaleFactor>=8000 && i!=24){			
+				if(numberOfTimelabels>=420 && i!=24){			
 					for(int j=1; j<=14;j++){
 						canvas.drawLine(offset+xpad+(i+0.0f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.0f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);
 						canvas.drawLine(offset+xpad+(i+0.25f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.25f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);
@@ -229,6 +234,33 @@ public class TimeLineView extends View {
 				}
 			}
 		}
+//		for(int i=0;i<25;i++){
+//			if((offset+xpad+(i+1)*lineWidth/24.f)+scrollX>0&&(offset+xpad+(i-1)*lineWidth/24.f)+scrollX-getWidth()<0){
+//				canvas.drawLine(offset+xpad+i*lineWidth/24.f, ypad+height*0.81f, offset+xpad+i*lineWidth/24.f, ypad+height*0.77f, mLinePaint);
+//				if(i%2==0 || getWidth()*scaleFactor>=1400 || i==24)
+//					canvas.drawText(""+i+":00", offset+xpad+i*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mTextPaint);
+//				if(getWidth()*scaleFactor>=2878 && i!=24){
+//					canvas.drawText(""+i+":30", offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mSubTextPaint);
+//					canvas.drawLine(offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.5f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
+//				}
+//				if(getWidth()*scaleFactor>=5040 && i!=24){
+//					canvas.drawLine(offset+xpad+(i+0.25f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.25f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
+//					canvas.drawLine(offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.79f, mLinePaint);
+//					if(getWidth()*scaleFactor>=6500){
+//						canvas.drawText(""+i+":15", offset+xpad+(i+0.25f)*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mSubTextPaint);
+//						canvas.drawText(""+i+":45", offset+xpad+(i+0.75f)*lineWidth/24.f, ypad+height*0.81f+mTextSize+2, mSubTextPaint);
+//					}
+//				}
+//				if(getWidth()*scaleFactor>=8000 && i!=24){			
+//					for(int j=1; j<=14;j++){
+//						canvas.drawLine(offset+xpad+(i+0.0f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.0f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);
+//						canvas.drawLine(offset+xpad+(i+0.25f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.25f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);
+//						canvas.drawLine(offset+xpad+(i+0.5f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.5f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);
+//						canvas.drawLine(offset+xpad+(i+0.75f+j/60.f)*lineWidth/24.f, ypad+height*0.81f, offset+xpad+(i+0.75f+j/60.f)*lineWidth/24.f, ypad+height*0.80f, mLinePaint);					
+//					}
+//				}
+//			}
+//		}
 		
 		canvas.drawLine(offset+xpad, ypad+height*0.8f, offset+xpad+lineWidth, ypad+height*0.8f, mLinePaint);
 		/**

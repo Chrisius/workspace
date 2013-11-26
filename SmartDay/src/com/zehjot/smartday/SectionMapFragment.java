@@ -13,7 +13,7 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
+//import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -103,7 +103,7 @@ public class SectionMapFragment extends MapFragment implements OnUpdateListener,
 			mMap.setOnInfoWindowClickListener(this);
 			double zoomLat=50.45;
 			double zoomLng=6.06;
-			CameraPosition camera = mMap.getCameraPosition();
+		//	CameraPosition camera = mMap.getCameraPosition();
 			try{
 				for(int i=0; i<markerList.size();i++){
 					markerList.get(i).remove();
@@ -196,7 +196,7 @@ public class SectionMapFragment extends MapFragment implements OnUpdateListener,
 			}catch (JSONException e){
 				e.printStackTrace();
 			}
-			if(camera.target.latitude==0&&camera.target.longitude==0)
+			//if(camera.target.latitude==0&&camera.target.longitude==0)
 				zoomTo(zoomLat, zoomLng);
 		}
 	}

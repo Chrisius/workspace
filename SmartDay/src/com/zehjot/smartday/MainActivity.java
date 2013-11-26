@@ -223,9 +223,9 @@ public class MainActivity extends Activity
         }
 	}
 	
-	private void init(Bundle savedInstanceState){	
-		if (getResources().getConfiguration().screenLayout < 
-			        Configuration.SCREENLAYOUT_SIZE_NORMAL) {
+	private void init(Bundle savedInstanceState){
+		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) <
+			        Configuration.SCREENLAYOUT_SIZE_LARGE) {
 			getActionBar().setDisplayShowTitleEnabled(false);
 			getActionBar().setDisplayShowHomeEnabled(false); 
 		}

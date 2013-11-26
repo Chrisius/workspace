@@ -43,10 +43,13 @@ public class Config {
 	}
 	
 	public static int getTextSize(Activity act){
-		if(bigScreen==-1 && act.getResources().getConfiguration().screenLayout < Configuration.SCREENLAYOUT_SIZE_NORMAL){
+		if(bigScreen==-1){
+			if((act.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) <
+		        Configuration.SCREENLAYOUT_SIZE_LARGE){
 				bigScreen = 0;
-		}else{
-			bigScreen = 1;
+			}else{
+				bigScreen = 1;
+			}
 		}
 		if(bigScreen == 0){
 			return textSizeSmallScreen;
@@ -55,14 +58,17 @@ public class Config {
 		}
 	}
 	public static int getTextSizeInPx(Activity act){
-		if(bigScreen==-1 && act.getResources().getConfiguration().screenLayout < Configuration.SCREENLAYOUT_SIZE_NORMAL){
-			bigScreen = 0;
-		}else{
-			bigScreen = 1;
+		if(bigScreen==-1){
+			if((act.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) <
+		        Configuration.SCREENLAYOUT_SIZE_LARGE){
+				bigScreen = 0;
+			}else{
+				bigScreen = 1;
+			}
 		}
 		if(bigScreen == 0){
 			if(textSizeSmallScreenPx==-1)
-				textSizeSmallScreenPx = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, textSizeSmallScreen, act.getResources().getDisplayMetrics())+0.5);
+				textSizeSmallScreenPx = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, textSizeSmallScreen, act.getResources().getDisplayMetrics())+0.5);
 			return textSizeSmallScreenPx;
 		}else{
 			if(textSizeBigScreenPx==-1)

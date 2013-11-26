@@ -51,7 +51,7 @@ public class TimeLineDetailView extends View {
 	
 	public TimeLineDetailView(Context context) {
 		super(context);
-		textSize = Config.getTextSize((Activity)getContext());
+		textSize = Config.getTextSizeInPx((Activity)getContext());
 		yOffset = textSize/3.f;
 		xOffset = 20; //was 20
 		

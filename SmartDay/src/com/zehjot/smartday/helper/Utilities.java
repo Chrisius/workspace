@@ -219,6 +219,11 @@ public class Utilities{
 	    	durationAsString = "0 sec";
 	    return durationAsString;
 	}
+	public static String getTimeAsClock(long sec){
+	    int h = (int)sec/3600;
+	    int m = ((int)sec%3600)/60;
+		return h+":"+m;
+	}	
 	public static String getDate(long timestampInSec){
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(timestampInSec*1000);

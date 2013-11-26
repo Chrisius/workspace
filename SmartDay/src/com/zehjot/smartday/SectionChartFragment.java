@@ -282,8 +282,8 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 				renderer.setClickEnabled(true);
 				renderer.setInScroll(true);
 				renderer.setChartTitle(Utilities.getDateWithDay(date)+", Total time "+Utilities.getTimeAsString((long) (totaltime*60)));
-				renderer.setChartTitleTextSize(Config.getTextSize(getActivity()));
-				renderer.setLabelsTextSize(Config.getTextSize(getActivity()));
+				renderer.setChartTitleTextSize(Config.getTextSizeInPx(getActivity()));
+				renderer.setLabelsTextSize(Config.getTextSizeInPx(getActivity()));
 				chartView = ChartFactory.getPieChartView(getActivity(), categories, renderer);	
 				chartView.setOnClickListener(new View.OnClickListener() {
 					@Override
