@@ -376,11 +376,12 @@ public class TimeLineView extends View {
 				time = Utilities.getSecondsOfDay(location.optLong("timestamp"));
 				label = DataSet.getInstance(getContext()).getPOI(lat, lng);
 				if(label != lastLabel){
-					if(positionLabels.length()==1){//case for first object
+					if(lastLabel==-2){//case for first object
 						positionLabels.getJSONObject(positionLabels.length()-1).put("label",label);
+					}else{
+						positionLabels.getJSONObject(positionLabels.length()-1).put("end",time);
+						positionLabels.put(new JSONObject().put("start",time).put("label",label));
 					}
-					positionLabels.getJSONObject(positionLabels.length()-1).put("end",time);
-					positionLabels.put(new JSONObject().put("start",time).put("label",label));					
 					lastLabel = label;
 				}
 				if(i==jObj.optJSONArray("locations").length()-1){

@@ -297,7 +297,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			user = jObj;
 			if( activity.getFileStreamPath(user.toString()+"poi").exists()){
 				try {
-					pointsOfInterest = new JSONObject(Utilities.readFile(user.toString()+"poi", activity));
+					pointsOfInterest = new JSONObject(Utilities.readFile(UserData.getUserName()+"poi", activity));
 				} catch (JSONException e) {
 					e.printStackTrace();
 					pointsOfInterest = null;
@@ -560,6 +560,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 			/**
 			 * delete positions
 			 */
+			/*
 			for(int i = 1;i<positionArray.length-1;i++){
 				//Position was visited at most 60 sec
 				if(positionArray[i]!=null&&positionArray[i+1]!=null&&positionArray[i-1]!=null){
@@ -579,6 +580,26 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 							positionArray[i]=null;
 						}					
 					}
+				}
+			}*/
+			int lastLocationindex =0;
+			for(int i = 1;i<positionArray.length-1;i++){
+				double distanceToLastPoint = Utilities.distance(
+						positionArray[lastLocationindex].optDouble("lat", 0), 
+						positionArray[lastLocationindex].optDouble("lng", 0), 
+						positionArray[i].optDouble("lat", 0), 
+						positionArray[i].optDouble("lng", 0)
+						);
+				if(distanceToLastPoint<=0.05
+				||distanceToLastPoint > Utilities.distance( //distance between A and B is greater than distance between A and C -> no line A-B-C
+						positionArray[lastLocationindex].optDouble("lat", 0), 
+						positionArray[lastLocationindex].optDouble("lng", 0), 
+						positionArray[i+1].optDouble("lat", 0), 
+						positionArray[i+1].optDouble("lng", 0)
+						)){
+					positionArray[i]=null;
+				}else{
+					lastLocationindex=i;
 				}
 			}
 			/**
@@ -834,7 +855,7 @@ public class DataSet implements OnUserDataAvailableListener, onDataDownloadedLis
 		}catch(JSONException e){
 			e.printStackTrace();
 		}
-		Utilities.writeFile(user.toString()+"poi", pointsOfInterest.toString(), activity);
+		Utilities.writeFile(UserData.getUserName()+"poi", pointsOfInterest.toString(), activity);
 	}
 	private boolean extendPOI(JSONObject position, long nextPositionTimestamp,double dist){
 		try{

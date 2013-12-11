@@ -257,7 +257,7 @@ public class SectionChartFragment extends Fragment implements OnUpdateListener{
 						}
 					}
 				}
-				if(apps.length>0){
+				if(apps.length>0&&renderer.getSeriesRendererCount()>0){
 					if(otherTime > 0){
 						SimpleSeriesRenderer r = new SimpleSeriesRenderer();
 						otherTime = Math.round((otherTime/totaltime)*10000.f);

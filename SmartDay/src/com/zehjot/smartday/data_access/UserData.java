@@ -49,7 +49,9 @@ public class UserData {
 	public UserData(Context context){
 		activity = (Activity) context;		
 	}
-	
+	public static String getUserName(){
+		return user.optString(activity.getString(R.string.user_name),null);
+	}
 	public interface OnUserDataAvailableListener{
 		public void onUserDataAvailable(JSONObject jObj);
 	}

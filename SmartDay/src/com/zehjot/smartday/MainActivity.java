@@ -23,7 +23,6 @@ import android.content.res.Configuration;
 public class MainActivity extends Activity 
 		implements  DataSet.onDataAvailableListener	{
 	private FragmentManager fm;
-//	private OptionsListFragment optionsListFragment;
 	private static DataSet dataSet;
 	private boolean isRunning = true;
 	private static Activity activity;
